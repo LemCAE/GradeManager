@@ -1,0 +1,19 @@
+{
+	"Print to conaole":{
+		"prefix": "C with hand annotation",
+		"body": [
+			"/*",
+			"",
+			"*/",
+			"",
+			"#include <stdio.h>",
+			"", 
+			"int main(){",
+			"    $0",
+			"",
+			"    return 0;", 
+			"}",
+		],
+		"description": "A C file template."
+	}
+}

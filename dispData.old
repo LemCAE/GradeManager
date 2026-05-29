@@ -1,0 +1,135 @@
+#include "data.h"
+
+void sortFromLow(int array[], int length);
+void sortFromHigh(float array[], int length);
+
+// 显示所有学生，每10条暂停，按学号升序
+void disp_student(Student slist[], int scount){
+    system("cls");
+    int studentArray[STUDENT_MAX];
+    for(int i = 0; i < scount; i++){
+        studentArray[i] = atoi(slist[i].xh);
+    }
+    sortFromLow(studentArray, scount);
+    printf("%-4s  %-12s  %-2s  %2s\n", "学号", "姓名", "性别", "年龄");
+    printf("===========================\n");
+    int count = 0;
+    for(int i = 0; i < scount; i++){
+        int index = getStuPosByID(slist, scount, studentArray[i]);
+        printf("%-4s  %-12s  %-2s  %2d\n",
+               slist[index].xh,
+               slist[index].xm,
+               slist[index].xb,
+               slist[index].nl);
+        if(((i + 1) % 10 == 0)||(i + 1 == scount)){
+            printf("===========================\n共有%d条记录，当前显示第%d条到第%d条\n", scount, count*10 + 1, i + 1);
+            count++;
+            if((i + 1 != scount)){
+                system("pause");
+                system("cls");
+                printf("%-4s  %-12s  %-2s  %2s\n", "学号", "姓名", "性别", "年龄");
+                printf("===========================\n");
+            }else {
+                system("pause");
+                system("cls");
+            }
+        }
+    }
+}
+
+// 显示所有课程，每10条暂停，按课号升序
+void disp_course(Course clist[], int ccount){
+    system("cls");
+    int courseArray[COURSE_MAX];
+    for(int i = 0; i < ccount; i++){
+        courseArray[i] = atoi(clist[i].kh);
+    }
+    sortFromLow(courseArray, ccount);
+    printf("%-4s  %-12s  %-2s\n", "课号", "课程名", "学分");
+    printf("===========================\n");
+    int count = 0;
+    for(int i = 0; i < ccount; i++){
+        int index = getCrsPosByID(clist, ccount, courseArray[i]);
+        printf("%-4s  %-12s  %-2.2f\n", clist[index].kh, clist[index].km, clist[index].xf);
+        if(((i + 1) % 10 == 0)||(i + 1 == ccount)){
+            printf("===========================\n共有%d条记录，当前显示第%d条到第%d条\n", ccount, count*10 + 1, i + 1);
+            count++;
+            if((i + 1 != ccount)){
+                system("pause");
+                system("cls");
+                printf("%-4s  %-12s  %-2s\n", "课号", "课程名", "学分");
+                printf("===========================\n");
+            }else {
+                system("pause");
+                system("cls");
+            }
+        }
+    }
+
+};
+
+// 显示成绩单，每10行暂停，按平均分降序
+void disp_cjlist(Score cjlist[], int cjcount, Course clist[], int ccount, Student slist[], int scount){
+    system("cls");
+    float scoreArray[SCORE_MAX];
+    int disped[SCORE_MAX]={0};
+    for(int i = 0; i < cjcount; i++){
+        scoreArray[i] = cjlist[i].zpj;
+    }
+    sortFromHigh(scoreArray, cjcount);
+    printf("%-10s %-20s %-8s %-8s %s\n", "学号", "姓名", "加权平均分", "总学分", "成绩明细");
+    printf("====================================\n");
+    int count = 0;
+    for(int i = 0; i < cjcount; i++){
+        int index = getScoPosBySco(cjlist, cjcount, scoreArray[i], disped);
+        printf("%-10s %-20s %-8.2f %-8.1f",
+               cjlist[index].xh,
+               cjlist[index].xm,
+               cjlist[index].zpj,
+               cjlist[index].zxf);
+        printf("[");
+        for (int j = 0; j < ccount; j++) {
+            if (cjlist[index].cj[j] != -1) {
+                printf("%-4s:%-4.2f\t", clist[j].km, cjlist[index].cj[j]);
+            }
+        }
+        printf("]\n");
+        if(((i + 1) % 10 == 0)||(i + 1 == cjcount)){
+            printf("===========================\n共有%d条记录，当前显示第%d条到第%d条\n", cjcount, count*10 + 1, i + 1);
+            count++;
+            if((i + 1 != cjcount)){
+                system("pause");
+                system("cls");
+            }else {
+                system("pause");
+                system("cls");
+            }
+        }
+    }
+
+}
+
+void sortFromLow(int array[], int length){
+    for(int i = 0; i < length; i++){
+        for(int j = 0; j < length - i - 1; j++){
+            if(array[j] > array[j + 1]){
+                int temp = array[j];
+                array[j] = array[j + 1];
+                array[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void sortFromHigh(float array[], int length){
+    for(int i = 0; i < length; i++){
+        for(int j = 0; j < length - i - 1; j++){
+            if(array[j] < array[j + 1]){
+                float temp = array[j];
+                array[j] = array[j + 1];
+                array[j + 1] = temp;
+            }
+        }
+    }
+}
+

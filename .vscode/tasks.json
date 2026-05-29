@@ -1,0 +1,49 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build all C files",
+            "type": "shell",
+            "command": "taskkill.exe /f /im GradeManager.exe 2>/dev/null; sleep 2; rm -f GradeManager.exe; D:/msys64/mingw64/bin/gcc.exe -g -Wall *.c -o GradeManager.exe",
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "shell": {
+                    "executable": "D:\\msys64\\usr\\bin\\bash.exe",
+                    "args": ["-c"]
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "使用 MSYS2 bash 编译所有 .c 文件"
+        },
+        {
+            "label": "Run in external terminal",
+            "type": "shell",
+            "command": "start",
+            "args": [
+                "${workspaceFolder}\\GradeManager.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "never"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build and Run",
+            "dependsOn": [
+                "Build all C files",
+                "Run in external terminal"
+            ],
+            "dependsOrder": "sequence",
+            "group": "none",
+            "problemMatcher": []
+        }
+    ]
+}
