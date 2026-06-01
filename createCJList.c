@@ -11,14 +11,12 @@ typedef struct
 } Score;
 */
 
-int ifStudentExist(Select sclist[], int sccount, Score cjlist[], int cjcount, char xh[]);//输入学号，判断该生是否已经存在cjlist中
-
 int create_cjlist(Student slist[], int scount, Select sclist[], int sccount, Course clist[], int ccount, Score cjlist[]){
     system("cls");
     int cjcount=0;
     
     for (int i=0; i<sccount; i++){
-        if(!ifStudentExist(sclist, sccount, cjlist, cjcount, sclist[i].xh)){
+        if(!queryExistInCJLByID(sclist, sccount, cjlist, cjcount, sclist[i].xh)){
             for(int j=0; j<ccount; j++){
                 cjlist[cjcount].cj[j] = -1;//-1表示空
             }//初始化成绩数组
@@ -38,17 +36,8 @@ int create_cjlist(Student slist[], int scount, Select sclist[], int sccount, Cou
             cjlist[locateByID(sclist[i].xh, cjlist, cjcount)].zpj /= cjlist[locateByID(sclist[i].xh, cjlist, cjcount)].zxf;
         }
     }
-    printScore(cjlist, cjcount, clist, ccount);
+    //printScore(cjlist, cjcount, clist, ccount);
 
     //system("pause");
     return cjcount;
-}
-
-int ifStudentExist(Select sclist[], int sccount, Score cjlist[], int cjcount, char xh[]){
-    for(int i=0; i<cjcount;i++){
-        if(strcmp(cjlist[i].xh,xh)==0){
-            return 1;
-        }
-    }
-    return 0;
 }

@@ -35,3 +35,27 @@ void sort_cjlist(Score cjlist[], int cjcount){
         }
     }
 }
+
+void sortFromLow(int array[], int length){
+    for(int i = 0; i < length; i++){
+        for(int j = 0; j < length - i - 1; j++){
+            if(array[j] > array[j + 1]){
+                int temp = array[j];
+                array[j] = array[j + 1];
+                array[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void sortFromHigh(float array[], int length){
+    for(int i = 0; i < length; i++){
+        for(int j = 0; j < length - i - 1; j++){
+            if(array[j] < array[j + 1]){
+                float temp = array[j];
+                array[j] = array[j + 1];
+                array[j + 1] = temp;
+            }
+        }
+    }
+}

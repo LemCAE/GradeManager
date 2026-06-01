@@ -1,9 +1,11 @@
 #include "data.h"
 
+char time_str[15];
+
 void write_to_file1(Student slist[], int scount, Course clist[], int ccount, Select sclist[], int sccount){
     system("cls");
     FILE *studentFile, *courseFile, *selectFile;
-    char time_str[15];
+    
     char studentFileName[64];
     char courseFileName[64];
     char selectFileName[64];
@@ -62,5 +64,31 @@ void write_to_file1(Student slist[], int scount, Course clist[], int ccount, Sel
 }
 
 void write_to_file2(Score cjlist[], int cjcount, Course clist[], int ccount, Student slist[], int scount){
+    FILE *scoreFile;
+    char scoreFileName[64];
 
+    sprintf(scoreFileName, "output/%sscore.txt", time_str);
+
+    if((scoreFile = fopen(scoreFileName, "w")) == NULL){
+        printf("[writeToFile]Error opening file\n");
+        return;
+    }
+
+    fprintf(scoreFile,"===== 成绩汇总 (%d 条) =====\n", cjcount);
+    fprintf(scoreFile,"%-10s %-20s %-8s %-8s %s\n", "学号", "姓名", "加权平均分", "总学分", "成绩明细");
+    for (int i = 0; i < cjcount; i++) {
+        fprintf(scoreFile,"%-10s %-20s %-8.2f %-8.1f",
+               cjlist[i].xh,
+               cjlist[i].xm,
+               cjlist[i].zpj,
+               cjlist[i].zxf);
+        fprintf(scoreFile,"[");
+        for (int j = 0; j < ccount; j++) {
+            if (cjlist[i].cj[j] != -1) {
+                fprintf(scoreFile,"%-4s:%-4.2f\t", clist[j].km, cjlist[i].cj[j]);
+            }
+        }
+        fprintf(scoreFile,"]\n");
+    }
+    fclose(scoreFile);
 }

@@ -1,6 +1,6 @@
 #include "data.h"
 
-static inline void printArrayInt(int array[], int size) {   // 使用 static inline 避免多重定义
+static inline void printArrayInt(int array[], int size) {
     printf("\n===============================\n");
     int printN = 1;
     for (int i = 0; i < size; i++) {

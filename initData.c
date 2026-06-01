@@ -15,7 +15,7 @@ void init(Student slist[], int *scount, Course clist[], int *ccount, Select scli
     printf("请输入课程文件的文件名：");
     scanf("%s", courseFileName);
     printf("请输入选课文件的文件名：");
-    scanf("%s", selectFileName);
+    scanf("%s", selectFileName);//这里还要处理当输入为空时的情况，此时直接应用默认文件名
 
     system("cls");
 

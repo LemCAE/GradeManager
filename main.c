@@ -3,6 +3,8 @@
 int menu_select();
 int displayMenuSelect();
 int inputMenuSelect();
+int queryMenuSelect();
+int deleteMenuSelect();
 
 int main(){
     SetConsoleOutputCP(CP_UTF8);//切换UTF-8
@@ -30,18 +32,18 @@ int main(){
             for(;;){
                 int quit = 0;
                 switch (displayMenuSelect()){
-                case 1:
-                    disp_student(slist, scount);
-                    break;
-                case 2:
-                    disp_course(clist, ccount);
-                    break;
-                case 3:
-                    disp_cjlist(cjlist, cjcount, clist, ccount, slist, scount);
-                    break;
-                case 0:
-                    quit = 1;
-                    break;
+                    case 1:
+                        disp_student(slist, scount);
+                        break;
+                    case 2:
+                        disp_course(clist, ccount);
+                        break;
+                    case 3:
+                        disp_cjlist(cjlist, cjcount, clist, ccount, slist, scount);
+                        break;
+                    case 0:
+                        quit = 1;
+                        break;
                 }
                 if(quit){ 
                     break;
@@ -53,18 +55,18 @@ int main(){
             for(;;){
                 int quit = 0;
                 switch (inputMenuSelect()){
-                case 1:
-                    scount = input_std(slist, scount);
-                    break;
-                case 2:
-                    ccount = input_course(clist, ccount);
-                    break;
-                case 3:
-                    sccount = input_select(sclist, scount);
-                    break;
-                case 0:
-                    quit = 1;
-                    break;
+                    case 1:
+                        scount = input_std(slist, scount);
+                        break;
+                    case 2:
+                        ccount = input_course(clist, ccount);
+                        break;
+                    case 3:
+                        sccount = input_select(sclist, scount);
+                        break;
+                    case 0:
+                        quit = 1;
+                        break;
                 }
                 if(quit){ 
                     break;
@@ -73,18 +75,53 @@ int main(){
             }
             break;
         case 4:
-            printf("Function4\n");
-
-            system("pause");
+            for(;;){
+                int quit = 0;
+                switch (deleteMenuSelect()){
+                    case 1:
+                        scount = delete_std(slist, scount);
+                        break;
+                    case 2:
+                        ccount = delete_course(clist, ccount);
+                        break;
+                    case 3:
+                        sccount = delete_select(sclist, scount);
+                    case 0:
+                        quit = 1;
+                        break;
+                }
+                if(quit){ 
+                    break;
+                    system("pause");
+                }
+            }
             break;
         case 5:
-            printf("Function5\n");
-
-            system("pause");
+            for(;;){
+                int quit = 0;
+                switch (queryMenuSelect()){
+                    case 1:
+                        query_std(slist, scount);
+                        break;
+                    case 2:
+                        query_course(clist, ccount);
+                        break;
+                    case 3:
+                        query_cjlist(cjlist, cjcount, clist, ccount, slist, scount);
+                        break;
+                    case 0:
+                        quit = 1;
+                        break;
+                }
+                if(quit){ 
+                    break;
+                    system("pause");
+                }
+            }
             break;
         case 6:
             write_to_file1(slist, scount, clist, ccount, sclist, sccount);
-
+            write_to_file2(cjlist, cjcount, clist, ccount, slist, scount);
             system("pause");
             break;
         case 0:
@@ -134,6 +171,34 @@ int inputMenuSelect(){
         printf("1. 输入学生数据\n");
         printf("2. 输入课程数据\n");
         printf("3. 输入选课数据\n");
+        printf("0. 返回上一级菜单\n");
+        printf("Input 1-3,0: ");
+        c=getchar();
+    } while (c<'0' || c>'3');
+    return(c-'0');
+}
+
+int queryMenuSelect(){
+    char c;
+    do {
+        system("cls");
+        printf("1. 按学号或姓名查询学生记录\n");
+        printf("2. 按课程号或课程名查询课程记录\n");
+        printf("3. 按学号查询成绩单\n");
+        printf("0. 返回上一级菜单\n");
+        printf("Input 1-3,0: ");
+        c=getchar();
+    } while (c<'0' || c>'3');
+    return(c-'0');
+}
+
+int deleteMenuSelect(){
+    char c;
+    do {
+        system("cls");
+        printf("1. 删除学生记录\n");
+        printf("2. 删除课程记录\n");
+        printf("3.删除选课记录\n");
         printf("0. 返回上一级菜单\n");
         printf("Input 1-3,0: ");
         c=getchar();

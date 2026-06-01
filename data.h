@@ -109,10 +109,15 @@ void cleaInputBuffer();//清空缓冲区，不过现在暂时用不着了
 //防重复查询
 int queryStuExistByID(Student slist[], int scount, char xh[]);
 int queryCrsExistByID(Course clist[], int ccount, char kh[]);
+int queryExistInCJLByID(Select sclist[], int sccount, Score cjlist[], int cjcount, char xh[]);//输入学号，判断该生是否已经存在cjlist中
 
 
 //utf-8编码控制
 int utf8CharLen(unsigned char c);//判断utf-8编码的字符长度
 int utf8DisplayWidth(const char *str);//计算utf-8编码的字符串显示宽度
+
+//通用排序
+void sortFromLow(int array[], int length);
+void sortFromHigh(float array[], int length);
 
 #endif

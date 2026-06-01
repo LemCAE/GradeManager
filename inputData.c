@@ -12,14 +12,19 @@ void drawField(inputField *f, int active);
 void drawTableFrameStudent();
 void drawTableFrameCourse();
 void drawTableFrameSelect();
-void inputForm(inputField fields[], int count, void (*drawFrame)(void));
+int inputForm(inputField fields[], int count, void (*drawFrame)(void));
+int emptyExist(inputField fields[], int count);
 
 //主输入函数
 
 int input_std(Student slist[], int scount){
     int ifContinue = 1;
+    int status = 0;
     while(ifContinue){
         system("cls");
+
+        gotoxy(5,8);
+        printf("←→切换输入项，回车确认，ESC退出");
 
         inputField fields[] = {
             {"姓名", "", 0, 6, 9},
@@ -28,12 +33,19 @@ int input_std(Student slist[], int scount){
             {"年龄", "", 0, 41, 4}
         };
 
-        inputForm(fields, 4, drawTableFrameStudent);
+        status = inputForm(fields, 4, drawTableFrameStudent);
+
+        if (!status) return scount;
+        if(!emptyExist(fields, 4)){
+            gotoxy(5,10);
+            printf("信息输入不完整，请重新输入");
+            _getch();
+            continue;
+        }
         
-        gotoxy(5,9);
+        gotoxy(5,10);
 
         int dataPos = queryStuExistByID(slist, scount, fields[1].buffer);
-
         if (dataPos == -1){
             strcpy(slist[scount].xm, fields[0].buffer);
             strcpy(slist[scount].xh, fields[1].buffer);
@@ -41,7 +53,7 @@ int input_std(Student slist[], int scount){
             slist[scount].nl = atoi(fields[3].buffer);
             scount++;
         } else{
-            printf("\n学号已存在,是否覆盖？(y/n):");
+            printf("学号已存在,是否覆盖？(y/n):");
             char coverChoice;
             scanf(" %c", &coverChoice);
             if (coverChoice == 'y'){
@@ -51,11 +63,11 @@ int input_std(Student slist[], int scount){
                 slist[dataPos].nl = atoi(fields[3].buffer);
             }
         }
-        gotoxy(5,9);
+        gotoxy(5,10);
         for (int i = 0; i < 75; i++) putchar(' ');
-        gotoxy(5,9);
+        gotoxy(5,10);
         char contChoice;
-        printf("\n是否继续输入？(y/n):");
+        printf("是否继续输入？(y/n):");
         scanf(" %c", &contChoice);
         ifContinue = (contChoice == 'y');
     }
@@ -64,8 +76,12 @@ int input_std(Student slist[], int scount){
 
 int input_course(Course clist[], int ccount){
     int ifContinue = 1;
+    int status = 0;
     while(ifContinue){
         system("cls");
+
+        gotoxy(5,8);
+        printf("←→切换输入项，回车确认，ESC退出");
 
         inputField courseFields[] = {
             {"课号", "", 0, 6, 10},
@@ -73,9 +89,17 @@ int input_course(Course clist[], int ccount){
             {"学分", "", 0, 38, 6}
         };
 
-        inputForm(courseFields, 3, drawTableFrameCourse);
+        status = inputForm(courseFields, 3, drawTableFrameCourse);
 
-        gotoxy(5,9);
+        if (!status) return ccount;
+        if(!emptyExist(courseFields, 4)){
+            gotoxy(5,10);
+            printf("信息输入不完整，请重新输入");
+            _getch();
+            continue;
+        }
+
+        gotoxy(5,10);
 
         int dataPos = queryCrsExistByID(clist, ccount, courseFields[0].buffer);
 
@@ -85,7 +109,7 @@ int input_course(Course clist[], int ccount){
             clist[ccount].xf = atof(courseFields[2].buffer);
             ccount++;
         } else{
-            printf("\n课号已存在,是否覆盖？(y/n):");
+            printf("课号已存在,是否覆盖？(y/n):");
             char coverChoice;
             scanf(" %c", &coverChoice);
             if (coverChoice == 'y'){
@@ -95,11 +119,11 @@ int input_course(Course clist[], int ccount){
             }
         }
         
-        gotoxy(5,9);
+        gotoxy(5,10);
         for (int i = 0; i < 75; i++) putchar(' ');
-        gotoxy(5,9);
+        gotoxy(5,10);
         char contChoice;
-        printf("\n是否继续输入？(y/n):");
+        printf("是否继续输入？(y/n):");
         scanf(" %c", &contChoice);
         ifContinue = (contChoice == 'y');
     }
@@ -130,16 +154,16 @@ int input_select(Select sclist[], int sccount){
 
         inputForm(selectFields, 3, drawTableFrameSelect);
 
-        gotoxy(5,9);
+        gotoxy(5,10);
 
 
 
         
-        gotoxy(5,9);
+        gotoxy(5,10);
         for (int i = 0; i < 75; i++) putchar(' ');
-        gotoxy(5,9);
+        gotoxy(5,10);
         char contChoice;
-        printf("\n是否继续输入？(y/n):");
+        printf("是否继续输入？(y/n):");
         scanf(" %c", &contChoice);
         ifContinue = (contChoice == 'y');
     }
@@ -169,7 +193,7 @@ void drawField(inputField *f, int active){//绘制输入区
     printf("%s", f->buffer);//先清空输入框，然后打印缓冲区里面的内容
 }
 
-void inputForm(inputField fields[], int count, void (*drawFrame)(void)){
+int inputForm(inputField fields[], int count, void (*drawFrame)(void)){
     int active=0;
 
     for (int i=0; i<count; i++){//初始化缓冲区和位置
@@ -205,7 +229,9 @@ void inputForm(inputField fields[], int count, void (*drawFrame)(void)){
                 }
             }
         } else if (ch == '\r'){
-                break;
+            return 1;
+        } else if (ch == 27){
+            return 0;
         } else if (ch == '\b'){
             if (cur->pos > 0){
             // 找到最后一个 UTF-8 字符的起始位置
@@ -243,7 +269,7 @@ void inputForm(inputField fields[], int count, void (*drawFrame)(void)){
                 printf("%s", utf8_char);
             }
         }
-        setcolor(0,7);             
+        setcolor(0,7);
     }
 }
 
@@ -325,4 +351,13 @@ void drawTableFrameSelect() {
 
     gotoxy(5, 7);
     printChar('=', 29);
+}
+
+int emptyExist(inputField fields[], int count){
+    for (int i=0; i<count; i++){
+        if (fields[i].buffer[0] == '\0'){
+            return 0;
+        }
+    }
+    return 1;
 }

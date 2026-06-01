@@ -18,3 +18,13 @@ int queryCrsExistByID(Course clist[], int ccount, char kh[]){
     return -1;
 }
 
+int queryExistInCJLByID(Select sclist[], int sccount, Score cjlist[], int cjcount, char xh[]){
+    for(int i=0; i<cjcount;i++){
+        if(strcmp(cjlist[i].xh,xh)==0){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+
