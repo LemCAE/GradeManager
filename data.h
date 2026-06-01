@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <time.h>
+#include <windows.h>
+#include <conio.h>
 
 #define STUDENT_MAX 100
 #define COURSE_MAX 100
@@ -96,5 +99,20 @@ void printCourses(Course clist[], int count);
 void printSelects(Select sclist[], int count);
 void printScore(Score cjlist[], int count, Course clist[], int ccount);
 void initDefault(Student slist[], int *scount, Course clist[], int *ccount, Select sclist[], int *sccount);
+
+//输出控制
+void gotoxy(int x, int y);
+void setcolor(int bg, int fg);
+void printChar(char c, int number);
+void cleaInputBuffer();//清空缓冲区，不过现在暂时用不着了
+
+//防重复查询
+int queryStuExistByID(Student slist[], int scount, char xh[]);
+int queryCrsExistByID(Course clist[], int ccount, char kh[]);
+
+
+//utf-8编码控制
+int utf8CharLen(unsigned char c);//判断utf-8编码的字符长度
+int utf8DisplayWidth(const char *str);//计算utf-8编码的字符串显示宽度
 
 #endif

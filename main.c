@@ -1,11 +1,12 @@
 #include "data.h"
-#include <windows.h>
 
 int menu_select();
-int subMenu_select();
+int displayMenuSelect();
+int inputMenuSelect();
 
 int main(){
     SetConsoleOutputCP(CP_UTF8);//切换UTF-8
+    SetConsoleCP(CP_UTF8);
 
     Student slist[STUDENT_MAX];
     Course clist[COURSE_MAX];
@@ -28,7 +29,7 @@ int main(){
         case 2:
             for(;;){
                 int quit = 0;
-                switch (subMenu_select()){
+                switch (displayMenuSelect()){
                 case 1:
                     disp_student(slist, scount);
                     break;
@@ -49,8 +50,27 @@ int main(){
             }
             break;
         case 3:
-            printf("Function3\n");
-            system("pause");
+            for(;;){
+                int quit = 0;
+                switch (inputMenuSelect()){
+                case 1:
+                    scount = input_std(slist, scount);
+                    break;
+                case 2:
+                    ccount = input_course(clist, ccount);
+                    break;
+                case 3:
+                    sccount = input_select(sclist, scount);
+                    break;
+                case 0:
+                    quit = 1;
+                    break;
+                }
+                if(quit){ 
+                    break;
+                    system("pause");
+                }
+            }
             break;
         case 4:
             printf("Function4\n");
@@ -63,7 +83,7 @@ int main(){
             system("pause");
             break;
         case 6:
-            printf("Function6\n");
+            write_to_file1(slist, scount, clist, ccount, sclist, sccount);
 
             system("pause");
             break;
@@ -93,13 +113,27 @@ int menu_select(){
     return(c-'0');
 }
 
-int subMenu_select(){
+int displayMenuSelect(){
     char c;
     do {
         system("cls");
         printf("1. 按学号升序显示学生记录\n");
         printf("2. 按课程号升序显示课程记录\n");
         printf("3. 按平均成绩降序显示成绩单\n");
+        printf("0. 返回上一级菜单\n");
+        printf("Input 1-3,0: ");
+        c=getchar();
+    } while (c<'0' || c>'3');
+    return(c-'0');
+}
+
+int inputMenuSelect(){
+    char c;
+    do {
+        system("cls");
+        printf("1. 输入学生数据\n");
+        printf("2. 输入课程数据\n");
+        printf("3. 输入选课数据\n");
         printf("0. 返回上一级菜单\n");
         printf("Input 1-3,0: ");
         c=getchar();

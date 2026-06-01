@@ -1,0 +1,171 @@
+#include "data.h"
+#include <windows.h>
+#include <conio.h>   // _getch()
+
+// 设置光标位置
+void gotoxy(int x, int y) {
+    COORD coord = {x, y};
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
+// 设置颜色（背景色4位 + 前景色4位）
+void setColor(int bg, int fg) {
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (bg << 4) | fg);
+}
+
+int menu_select();
+int displayMenuSselect();
+
+int main(){
+    SetConsoleOutputCP(CP_UTF8);//切换UTF-8
+
+    Student slist[STUDENT_MAX];
+    Course clist[COURSE_MAX];
+    Select sclist[SELECT_MAX];
+    Score cjlist[SCORE_MAX];
+
+    int scount=0,ccount=0,sccount=0,cjcount=0;
+    
+    initDefault(slist, &scount, clist, &ccount, sclist, &sccount);//默认加载文件
+    cjcount = create_cjlist(slist, scount, sclist, sccount, clist, ccount, cjlist);//生成成绩单
+    
+    for(;;){
+        switch (menu_select()){
+        case 1:
+            init(slist, &scount, clist, &ccount, sclist, &sccount);
+            cjcount = create_cjlist(slist, scount, sclist, sccount, clist, ccount, cjlist);
+            printf("导入成功\n");
+            system("pause");
+            break;
+        case 2:
+            for(;;){
+                int quit = 0;
+                switch (displayMenuSselect()){
+                case 1:
+                    disp_student(slist, scount);
+                    break;
+                case 2:
+                    disp_course(clist, ccount);
+                    break;
+                case 3:
+                    disp_cjlist(cjlist, cjcount, clist, ccount, slist, scount);
+                    break;
+                case 0:
+                    quit = 1;
+                    break;
+                }
+                if(quit){ 
+                    break;
+                    system("pause");
+                }
+            }
+            break;
+        case 3:
+            printf("Function3\n");
+            system("pause");
+            break;
+        case 4:
+            printf("Function4\n");
+
+            system("pause");
+            break;
+        case 5:
+            printf("Function5\n");
+
+            system("pause");
+            break;
+        case 6:
+            write_to_file1(slist, scount, clist, ccount, sclist, sccount);
+            
+            system("pause");
+            break;
+        case 0:
+            system("pause");
+            exit(0);
+        }
+    }
+
+    return 0;
+}
+
+int menu_select() {
+    char *items[] = {
+        "1. 导入初始数据",
+        "2. 显示信息",
+        "3. 输入记录",
+        "4. 删除记录",
+        "5. 查询信息",
+        "6. 批量导出数据",
+        "0. 退出"
+    };
+    int count = 7;          // 菜单项数量
+    int selected = 0;       // 当前选中索引
+
+    while (1) {
+        // 绘制整个菜单
+        system("cls");
+        for (int i = 0; i < count; i++) {
+            gotoxy(2, 2 + i);   // 自行调整起始位置
+            if (i == selected) {
+                setColor(7, 0);  // 白底黑字（高亮）
+            } else {
+                setColor(0, 7);  // 黑底白字（正常）
+            }
+            printf("%s", items[i]);
+        }
+        setColor(0, 7);  // 恢复默认颜色
+
+        // 读取按键
+        int ch = _getch();
+        if (ch == 224 || ch == 0) {      // 方向键前缀
+            int key = _getch();
+            if (key == 72) {             // 上箭头
+                selected = (selected - 1 + count) % count;
+            } else if (key == 80) {      // 下箭头
+                selected = (selected + 1) % count;
+            }
+        } else if (ch == '\r') {         // 回车
+            // 映射返回值：第6项(退出)返回0，其他返回 i+1
+            if (selected == 6) return 0;
+            else return selected + 1;
+        }
+    }
+}
+
+int displayMenuSselect() {
+    char *items[] = {
+        "1. 按学号升序显示学生记录",
+        "2. 按课程号升序显示课程记录",
+        "3. 按平均成绩降序显示成绩单",
+        "0. 返回上一级菜单"
+    };
+    int count = 4;
+    int selected = 0;
+
+    while (1) {
+        system("cls");
+        for (int i = 0; i < count; i++) {
+            gotoxy(2, 2 + i);
+            if (i == selected) {
+                setColor(7, 0);
+            } else {
+                setColor(0, 7);
+            }
+            printf("%s", items[i]);
+        }
+        setColor(0, 7);
+
+        int ch = _getch();
+        if (ch == 224 || ch == 0) {
+            int key = _getch();
+            if (key == 72) {
+                selected = (selected - 1 + count) % count;
+            } else if (key == 80) {
+                selected = (selected + 1) % count;
+            }
+        } else if (ch == '\r') {
+            if (selected == 3) return 0;  // 最后一项返回0
+            else return selected + 1;
+        }
+    }
+}

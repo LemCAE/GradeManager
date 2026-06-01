@@ -7,23 +7,23 @@ void sortFromHigh(float array[], int length);
 void disp_student(Student slist[], int scount){
     system("cls");
     sort_slist(slist, scount);
-    printf("%-4s  %-12s  %-2s  %2s\n", "学号", "姓名", "性别", "年龄");
-    printf("===========================\n");
+    printf("%-4s  %-16s\t  %-6s  %-4s\n", "学号", "姓名", "性别", "年龄");
+    printf("================================\n");
     int count = 0;
     for(int i = 0; i < scount; i++){
-        printf("%-4s  %-12s  %-2s  %2d\n",
+        printf("%-4s  %-16s\t  %-6s  %-4d\n",
                slist[i].xh,
                slist[i].xm,
                slist[i].xb,
                slist[i].nl);
         if(((i + 1) % 10 == 0)||(i + 1 == scount)){
-            printf("===========================\n共有%d条记录，当前显示第%d条到第%d条\n", scount, count*10 + 1, i + 1);
+            printf("================================\n共有%d条记录，当前显示第%d条到第%d条\n", scount, count*10 + 1, i + 1);
             count++;
             if((i + 1 != scount)){
                 system("pause");
                 system("cls");
-                printf("%-4s  %-12s  %-2s  %2s\n", "学号", "姓名", "性别", "年龄");
-                printf("===========================\n");
+                printf("%-4s  %-16s\t  %-6s  %-4s\n", "学号", "姓名", "性别", "年龄");
+                printf("================================\n");
             }else {
                 system("pause");
                 system("cls");
@@ -36,22 +36,22 @@ void disp_student(Student slist[], int scount){
 void disp_course(Course clist[], int ccount){
     system("cls");
     sort_clist(clist, ccount);
-    printf("%-4s  %-12s  %-2s\n", "课号", "课程名", "学分");
-    printf("===========================\n");
+    printf("%-4s  %-32s\t  %2s\n", "课号", "课程名", "学分");
+    printf("================================\n");
     int count = 0;
     for(int i = 0; i < ccount; i++){
-        printf("%-4s  %-12s  %-2.2f\n", 
+        printf("%-4s  %-32s\t  %2.2f\n", 
             clist[i].kh, 
             clist[i].km, 
             clist[i].xf);
         if(((i + 1) % 10 == 0)||(i + 1 == ccount)){
-            printf("===========================\n共有%d条记录，当前显示第%d条到第%d条\n", ccount, count*10 + 1, i + 1);
+            printf("================================\n共有%d条记录，当前显示第%d条到第%d条\n", ccount, count*10 + 1, i + 1);
             count++;
             if((i + 1 != ccount)){
                 system("pause");
                 system("cls");
-                printf("%-4s  %-12s  %-2s\n", "课号", "课程名", "学分");
-                printf("===========================\n");
+                printf("%-4s  %-32s\t  %2s\n", "课号", "课程名", "学分");
+                printf("================================\n");
             }else {
                 system("pause");
                 system("cls");
@@ -77,7 +77,7 @@ void disp_cjlist(Score cjlist[], int cjcount, Course clist[], int ccount, Studen
         printf("[");
         for (int j = 0; j < ccount; j++) {
             if (cjlist[i].cj[j] != -1) {
-                printf("%-4s:%-4.2f\t", clist[j].km, cjlist[i].cj[j]);
+                printf("%-8s:%-6.2f\t", clist[j].km, cjlist[i].cj[j]);
             }
         }
         printf("]\n");
