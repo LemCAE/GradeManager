@@ -5,3 +5,6 @@ Requirement
 output
 GradeManager.exe
 .claude
+plan.md
+initData.c.backup
+resource.o

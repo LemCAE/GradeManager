@@ -25,8 +25,6 @@ int main(){
         case 1:
             init(slist, &scount, clist, &ccount, sclist, &sccount);
             cjcount = create_cjlist(slist, scount, sclist, sccount, clist, ccount, cjlist);
-            printf("导入成功\n");
-            system("pause");
             break;
         case 2:
             for(;;){
@@ -62,7 +60,7 @@ int main(){
                         ccount = input_course(clist, ccount);
                         break;
                     case 3:
-                        sccount = input_select(sclist, scount);
+                        sccount = input_select(sclist, sccount, slist, scount, clist, ccount);
                         break;
                     case 0:
                         quit = 1;
@@ -73,6 +71,7 @@ int main(){
                     system("pause");
                 }
             }
+            cjcount = create_cjlist(slist, scount, sclist, sccount, clist, ccount, cjlist);
             break;
         case 4:
             for(;;){
@@ -85,7 +84,8 @@ int main(){
                         ccount = delete_course(clist, ccount);
                         break;
                     case 3:
-                        sccount = delete_select(sclist, scount);
+                        sccount = delete_select(sclist, sccount);
+                        break;
                     case 0:
                         quit = 1;
                         break;
@@ -95,6 +95,7 @@ int main(){
                     system("pause");
                 }
             }
+            cjcount = create_cjlist(slist, scount, sclist, sccount, clist, ccount, cjlist);
             break;
         case 5:
             for(;;){
@@ -122,10 +123,8 @@ int main(){
         case 6:
             write_to_file1(slist, scount, clist, ccount, sclist, sccount);
             write_to_file2(cjlist, cjcount, clist, ccount, slist, scount);
-            system("pause");
             break;
         case 0:
-            system("pause");
             exit(0);
         }
     }
@@ -133,75 +132,312 @@ int main(){
     return 0;
 }
 
-int menu_select(){
-    char c;
-    do {
-        system("cls");
-        printf("1. 导入初始数据\n");
-        printf("2. 显示信息\n");
-        printf("3. 输入记录\n");
-        printf("4. 删除记录\n");
-        printf("5. 查询信息\n");
-        printf("6. 批量导出数据\n");
-        printf("0. 退出\n");
-        printf("Input 1-6,0: ");
-        c=getchar();
-    } while (c<'0' || c>'6');
-    return(c-'0');
+////////////////////////////
+
+int menu_select() {
+    char *items[] = {
+        "1. 导入初始数据",
+        "2. 显示信息",
+        "3. 输入记录",
+        "4. 删除记录",
+        "5. 查询信息",
+        "6. 批量导出数据",
+        "0. 退出"
+    };
+    int count = 7;
+    int selected = 0;
+    int x = 5, y = 2;   // 菜单起始坐标
+
+    system("cls");
+    for (int i = 0; i < count; i++) {
+        gotoxy(x, y + i);
+        if (i == selected) setcolor(7, 0);
+        else setcolor(0, 7);
+        printf("%s", items[i]);
+    }
+    setcolor(0, 7);
+
+    while (1) {
+        int ch = _getch();
+        if (ch == 0 || ch == 224) {
+            int key = _getch();
+            int prev = selected;
+            if (key == 72) selected = (selected - 1 + count) % count;
+            else if (key == 80) selected = (selected + 1) % count;
+
+            if (prev != selected) {
+                gotoxy(x, y + prev);
+                setcolor(0, 7);
+                printf("%s", items[prev]);
+                gotoxy(x, y + selected);
+                setcolor(7, 0);
+                printf("%s", items[selected]);
+                setcolor(0, 7);
+            }
+        } else if (ch == '\r') {
+            if (selected == 6) return 0;
+            else return selected + 1;
+        }
+    }
 }
 
-int displayMenuSelect(){
-    char c;
-    do {
-        system("cls");
-        printf("1. 按学号升序显示学生记录\n");
-        printf("2. 按课程号升序显示课程记录\n");
-        printf("3. 按平均成绩降序显示成绩单\n");
-        printf("0. 返回上一级菜单\n");
-        printf("Input 1-3,0: ");
-        c=getchar();
-    } while (c<'0' || c>'3');
-    return(c-'0');
+
+int displayMenuSelect() {
+    char *items[] = {
+        "1. 按学号升序显示学生记录",
+        "2. 按课程号升序显示课程记录",
+        "3. 按平均成绩降序显示成绩单",
+        "0. 返回上一级菜单"
+    };
+    int count = 4;
+    int selected = 0;
+    int x = 5, y = 2;
+
+    system("cls");
+    for (int i = 0; i < count; i++) {
+        gotoxy(x, y + i);
+        if (i == selected) setcolor(7, 0);
+        else setcolor(0, 7);
+        printf("%s", items[i]);
+    }
+    setcolor(0, 7);
+
+    while (1) {
+        int ch = _getch();
+        if (ch == 0 || ch == 224) {
+            int key = _getch();
+            int prev = selected;
+            if (key == 72) selected = (selected - 1 + count) % count;
+            else if (key == 80) selected = (selected + 1) % count;
+
+            if (prev != selected) {
+                gotoxy(x, y + prev);
+                setcolor(0, 7);
+                printf("%s", items[prev]);
+                gotoxy(x, y + selected);
+                setcolor(7, 0);
+                printf("%s", items[selected]);
+                setcolor(0, 7);
+            }
+        } else if (ch == '\r') {
+            if (selected == 3) return 0;
+            else return selected + 1;
+        } else if (ch == 27) {
+            return 0;
+        }
+    }
 }
 
-int inputMenuSelect(){
-    char c;
-    do {
-        system("cls");
-        printf("1. 输入学生数据\n");
-        printf("2. 输入课程数据\n");
-        printf("3. 输入选课数据\n");
-        printf("0. 返回上一级菜单\n");
-        printf("Input 1-3,0: ");
-        c=getchar();
-    } while (c<'0' || c>'3');
-    return(c-'0');
+int inputMenuSelect() {
+    char *items[] = {
+        "1. 输入学生数据",
+        "2. 输入课程数据",
+        "3. 输入选课数据",
+        "0. 返回上一级菜单"
+    };
+    int count = 4;
+    int selected = 0;
+    int x = 5, y = 2;
+
+    system("cls");
+    for (int i = 0; i < count; i++) {
+        gotoxy(x, y + i);
+        if (i == selected) setcolor(7, 0);
+        else setcolor(0, 7);
+        printf("%s", items[i]);
+    }
+    setcolor(0, 7);
+
+    while (1) {
+        int ch = _getch();
+        if (ch == 0 || ch == 224) {
+            int key = _getch();
+            int prev = selected;
+            if (key == 72) selected = (selected - 1 + count) % count;
+            else if (key == 80) selected = (selected + 1) % count;
+
+            if (prev != selected) {
+                gotoxy(x, y + prev);
+                setcolor(0, 7);
+                printf("%s", items[prev]);
+                gotoxy(x, y + selected);
+                setcolor(7, 0);
+                printf("%s", items[selected]);
+                setcolor(0, 7);
+            }
+        } else if (ch == '\r') {
+            if (selected == 3) return 0;
+            else return selected + 1;
+        } else if (ch == 27) {
+            return 0;
+        }
+    }
 }
 
-int queryMenuSelect(){
-    char c;
-    do {
-        system("cls");
-        printf("1. 按学号或姓名查询学生记录\n");
-        printf("2. 按课程号或课程名查询课程记录\n");
-        printf("3. 按学号查询成绩单\n");
-        printf("0. 返回上一级菜单\n");
-        printf("Input 1-3,0: ");
-        c=getchar();
-    } while (c<'0' || c>'3');
-    return(c-'0');
+int queryMenuSelect() {
+    char *items[] = {
+        "1. 按学号或姓名查询学生记录",
+        "2. 按课程号或课程名查询课程记录",
+        "3. 按学号查询成绩单",
+        "0. 返回上一级菜单"
+    };
+    int count = 4;
+    int selected = 0;
+    int x = 5, y = 2;
+
+    system("cls");
+    for (int i = 0; i < count; i++) {
+        gotoxy(x, y + i);
+        if (i == selected) setcolor(7, 0);
+        else setcolor(0, 7);
+        printf("%s", items[i]);
+    }
+    setcolor(0, 7);
+
+    while (1) {
+        int ch = _getch();
+        if (ch == 0 || ch == 224) {
+            int key = _getch();
+            int prev = selected;
+            if (key == 72) selected = (selected - 1 + count) % count;
+            else if (key == 80) selected = (selected + 1) % count;
+
+            if (prev != selected) {
+                gotoxy(x, y + prev);
+                setcolor(0, 7);
+                printf("%s", items[prev]);
+                gotoxy(x, y + selected);
+                setcolor(7, 0);
+                printf("%s", items[selected]);
+                setcolor(0, 7);
+            }
+        } else if (ch == '\r') {
+            if (selected == 3) return 0;
+            else return selected + 1;
+        } else if (ch == 27) {
+            return 0;
+        }
+    }
 }
 
-int deleteMenuSelect(){
-    char c;
-    do {
-        system("cls");
-        printf("1. 删除学生记录\n");
-        printf("2. 删除课程记录\n");
-        printf("3.删除选课记录\n");
-        printf("0. 返回上一级菜单\n");
-        printf("Input 1-3,0: ");
-        c=getchar();
-    } while (c<'0' || c>'3');
-    return(c-'0');
+int deleteMenuSelect() {
+    char *items[] = {
+        "1. 删除学生记录",
+        "2. 删除课程记录",
+        "3. 删除选课记录",
+        "0. 返回上一级菜单"
+    };
+    int count = 4;
+    int selected = 0;
+    int x = 5, y = 2;
+
+    system("cls");
+    for (int i = 0; i < count; i++) {
+        gotoxy(x, y + i);
+        if (i == selected) setcolor(7, 0);
+        else setcolor(0, 7);
+        printf("%s", items[i]);
+    }
+    setcolor(0, 7);
+
+    while (1) {
+        int ch = _getch();
+        if (ch == 0 || ch == 224) {
+            int key = _getch();
+            int prev = selected;
+            if (key == 72) selected = (selected - 1 + count) % count;
+            else if (key == 80) selected = (selected + 1) % count;
+
+            if (prev != selected) {
+                gotoxy(x, y + prev);
+                setcolor(0, 7);
+                printf("%s", items[prev]);
+                gotoxy(x, y + selected);
+                setcolor(7, 0);
+                printf("%s", items[selected]);
+                setcolor(0, 7);
+            }
+        } else if (ch == '\r') {
+            if (selected == 3) return 0;
+            else return selected + 1;
+        } else if (ch == 27) {
+            return 0;
+        }
+    }
 }
+
+
+// int menu_select(){
+//     char c;
+//     do {
+//         system("cls");
+//         printf("1. 导入初始数据\n");
+//         printf("2. 显示信息\n");
+//         printf("3. 输入记录\n");
+//         printf("4. 删除记录\n");
+//         printf("5. 查询信息\n");
+//         printf("6. 批量导出数据\n");
+//         printf("0. 退出\n");
+//         printf("Input 1-6,0: ");
+//         c=getchar();
+//     } while (c<'0' || c>'6');
+//     return(c-'0');
+// }
+
+
+// int displayMenuSelect(){
+//     char c;
+//     do {
+//         system("cls");
+//         printf("1. 按学号升序显示学生记录\n");
+//         printf("2. 按课程号升序显示课程记录\n");
+//         printf("3. 按平均成绩降序显示成绩单\n");
+//         printf("0. 返回上一级菜单\n");
+//         printf("Input 1-3,0: ");
+//         c=getchar();
+//     } while (c<'0' || c>'3');
+//     return(c-'0');
+// }
+
+
+// int inputMenuSelect(){
+//     char c;
+//     do {
+//         system("cls");
+//         printf("1. 输入学生数据\n");
+//         printf("2. 输入课程数据\n");
+//         printf("3. 输入选课数据\n");
+//         printf("0. 返回上一级菜单\n");
+//         printf("Input 1-3,0: ");
+//         c=getchar();
+//     } while (c<'0' || c>'3');
+//     return(c-'0');
+// }
+
+// int queryMenuSelect(){
+//     char c;
+//     do {
+//         system("cls");
+//         printf("1. 按学号或姓名查询学生记录\n");
+//         printf("2. 按课程号或课程名查询课程记录\n");
+//         printf("3. 按学号查询成绩单\n");
+//         printf("0. 返回上一级菜单\n");
+//         printf("Input 1-3,0: ");
+//         c=getchar();
+//     } while (c<'0' || c>'3');
+//     return(c-'0');
+// }
+
+// int deleteMenuSelect(){
+//     char c;
+//     do {
+//         system("cls");
+//         printf("1. 删除学生记录\n");
+//         printf("2. 删除课程记录\n");
+//         printf("3.删除选课记录\n");
+//         printf("0. 返回上一级菜单\n");
+//         printf("Input 1-3,0: ");
+//         c=getchar();
+//     } while (c<'0' || c>'3');
+//     return(c-'0');
+// }

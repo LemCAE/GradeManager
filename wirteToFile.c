@@ -4,8 +4,9 @@ char time_str[15];
 
 void write_to_file1(Student slist[], int scount, Course clist[], int ccount, Select sclist[], int sccount){
     system("cls");
+    CreateDirectory("output", NULL);
+
     FILE *studentFile, *courseFile, *selectFile;
-    
     char studentFileName[64];
     char courseFileName[64];
     char selectFileName[64];
@@ -60,6 +61,7 @@ void write_to_file1(Student slist[], int scount, Course clist[], int ccount, Sel
     fclose(studentFile);
     fclose(courseFile);
     fclose(selectFile);
+    gotoxy(5,2);
     printf("已成功导出数据文件!\n");
 }
 
@@ -75,11 +77,13 @@ void write_to_file2(Score cjlist[], int cjcount, Course clist[], int ccount, Stu
     }
 
     fprintf(scoreFile,"===== 成绩汇总 (%d 条) =====\n", cjcount);
-    fprintf(scoreFile,"%-10s %-20s %-8s %-8s %s\n", "学号", "姓名", "加权平均分", "总学分", "成绩明细");
+    fprintf(scoreFile,"%4s %-10s %-20s %4s %-8s %-8s %s\n","排名", "学号", "姓名", "性别", "加权平均分", "总学分", "成绩明细");
     for (int i = 0; i < cjcount; i++) {
-        fprintf(scoreFile,"%-10s %-20s %-8.2f %-8.1f",
+        fprintf(scoreFile, "%-4d", i + 1);
+        fprintf(scoreFile,"%-10s %-20s %-4s %-8.2f %-8.1f",
                cjlist[i].xh,
                cjlist[i].xm,
+               slist[queryStuExistByID(slist, scount, cjlist[i].xh)].xb,
                cjlist[i].zpj,
                cjlist[i].zxf);
         fprintf(scoreFile,"[");
@@ -91,4 +95,8 @@ void write_to_file2(Score cjlist[], int cjcount, Course clist[], int ccount, Stu
         fprintf(scoreFile,"]\n");
     }
     fclose(scoreFile);
+    gotoxy(5,3);
+    printf("已成功导出成绩单!\n");
+    gotoxy(5,4);
+    _getch();
 }

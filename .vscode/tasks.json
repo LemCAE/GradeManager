@@ -4,7 +4,7 @@
         {
             "label": "Build all C files",
             "type": "shell",
-            "command": "taskkill.exe /f /im GradeManager.exe 2>/dev/null; sleep 2; rm -f GradeManager.exe; D:/msys64/mingw64/bin/gcc.exe -g -Wall *.c -o GradeManager.exe",
+            "command": "taskkill.exe /f /im GradeManager.exe 2>/dev/null; windres resource.rc -O coff -o resource.o;D:/msys64/mingw64/bin/gcc.exe -g -Wall *.c resource.o -o GradeManager.exe",
             "args": [],
             "options": {
                 "cwd": "${workspaceFolder}",
