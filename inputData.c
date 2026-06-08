@@ -148,6 +148,11 @@ int input_select(Select sclist[], int sccount, Student slist[], int scount, Cour
 
         int dataPos = querySelExistByID(sclist, sccount, selectFields[0].buffer, selectFields[1].buffer);
 
+        if (!(-1 <= atof(selectFields[2].buffer) && atof(selectFields[2].buffer) <= 120)){
+            gotoxy(5,10);
+            printf("成绩异常");
+        }
+
         if (queryStuExistByID(slist, scount, selectFields[0].buffer) != -1 && queryCrsExistByID(clist, ccount, selectFields[1].buffer) != -1){
             if (dataPos == -1){
                 strcpy(sclist[sccount].xh, selectFields[0].buffer);

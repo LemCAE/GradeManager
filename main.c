@@ -16,6 +16,7 @@ int main(){
     Score cjlist[SCORE_MAX];
 
     int scount=0,ccount=0,sccount=0,cjcount=0;
+    int stuPos, crsPos;
     
     initDefault(slist, &scount, clist, &ccount, sclist, &sccount);//默认加载文件
     cjcount = create_cjlist(slist, scount, sclist, sccount, clist, ccount, cjlist);//生成成绩单
@@ -25,6 +26,7 @@ int main(){
         case 1:
             init(slist, &scount, clist, &ccount, sclist, &sccount);
             cjcount = create_cjlist(slist, scount, sclist, sccount, clist, ccount, cjlist);
+            sort_cjlist(cjlist, cjcount);
             break;
         case 2:
             for(;;){
@@ -67,6 +69,7 @@ int main(){
                         break;
                 }
                 if(quit){ 
+                    
                     break;
                     system("pause");
                 }
@@ -95,6 +98,7 @@ int main(){
                     system("pause");
                 }
             }
+            clearSCList(slist, scount, clist, ccount, sclist, &sccount);
             cjcount = create_cjlist(slist, scount, sclist, sccount, clist, ccount, cjlist);
             break;
         case 5:
@@ -102,13 +106,16 @@ int main(){
                 int quit = 0;
                 switch (queryMenuSelect()){
                     case 1:
-                        query_std(slist, scount);
+                        query_std(slist, scount, &stuPos);
+                        _getch();
                         break;
                     case 2:
-                        query_course(clist, ccount);
+                        query_course(clist, ccount, &crsPos);
+                        _getch();
                         break;
                     case 3:
-                        query_cjlist(cjlist, cjcount, clist, ccount, slist, scount);
+                        sort_cjlist(cjlist, cjcount);
+                        query_cjlist(cjlist, cjcount, clist, ccount, slist, scount, sclist, sccount);
                         break;
                     case 0:
                         quit = 1;
@@ -121,6 +128,7 @@ int main(){
             }
             break;
         case 6:
+            sort_cjlist(cjlist, cjcount);
             write_to_file1(slist, scount, clist, ccount, sclist, sccount);
             write_to_file2(cjlist, cjcount, clist, ccount, slist, scount);
             break;

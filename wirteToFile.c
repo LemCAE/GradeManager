@@ -88,8 +88,10 @@ void write_to_file2(Score cjlist[], int cjcount, Course clist[], int ccount, Stu
                cjlist[i].zxf);
         fprintf(scoreFile,"[");
         for (int j = 0; j < ccount; j++) {
-            if (cjlist[i].cj[j] != -1) {
+            if (cjlist[i].cj[j] != -1 && cjlist[i].cj[j] != -2) {
                 fprintf(scoreFile,"%-4s:%-4.2f\t", clist[j].km, cjlist[i].cj[j]);
+            } else if (cjlist[i].cj[j] == -1){
+                fprintf(scoreFile,"%-4s:%-4s\t", clist[j].km, "暂无");
             }
         }
         fprintf(scoreFile,"]\n");

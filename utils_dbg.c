@@ -76,8 +76,10 @@ void printScore(Score cjlist[], int count, Course clist[], int ccount) {
                cjlist[i].zxf);
         printf("[");
         for (int j = 0; j < ccount; j++) {
-            if (cjlist[i].cj[j] != -1) {
+            if (cjlist[i].cj[j] != -1 && cjlist[i].cj[j] != -2) {//这里的cj[j]是成绩，-1表示没有成绩，-2才是空
                 printf("%-4s:%-4.2f\t", clist[j].km, cjlist[i].cj[j]);
+            } else if (cjlist[i].cj[j] == -1) {
+                printf("%-4s:%-4s\t", clist[j].km, "暂无");
             }
         }
         printf("]\n");

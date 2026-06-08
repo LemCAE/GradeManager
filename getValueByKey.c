@@ -30,7 +30,9 @@ char* getNameByID(Student slist[], int scount, char xh[]){
             return slist[i].xm;
         }
     }
+    setcolor(4,7);
     printf("[createCJList] getNameByID error\n");
+    setcolor(7,0);
     return '\0';
     system("pause");
     exit(1);

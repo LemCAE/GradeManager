@@ -14,30 +14,46 @@ typedef struct
 int create_cjlist(Student slist[], int scount, Select sclist[], int sccount, Course clist[], int ccount, Score cjlist[]){
     system("cls");
     int cjcount=0;
-    
+
     for (int i=0; i<sccount; i++){
         if(!queryExistInCJLByID(sclist, sccount, cjlist, cjcount, sclist[i].xh)){
             for(int j=0; j<ccount; j++){
-                cjlist[cjcount].cj[j] = -1;//-1表示空
+                cjlist[cjcount].cj[j] = -2;//-2表示未选
             }//初始化成绩数组
             strcpy(cjlist[cjcount].xh, sclist[i].xh);
             strcpy(cjlist[cjcount].xm, getNameByID(slist, scount, sclist[i].xh));
-            cjlist[cjcount].cj[getClassPosByClassID(clist, ccount, sclist[i].kh)] = sclist[i].cj;
-            cjlist[cjcount].zpj = sclist[i].cj;
-            cjlist[cjcount].zxf = getPointByClass(clist, ccount, sclist[i].kh);
+
+            int pos = getClassPosByClassID(clist, ccount, sclist[i].kh);
+            cjlist[cjcount].cj[pos] = sclist[i].cj;
+
+            if (sclist[i].cj != -1){
+                float credit = getPointByClass(clist, ccount, sclist[i].kh);
+                cjlist[cjcount].zpj = sclist[i].cj * credit;
+                cjlist[cjcount].zxf = credit;
+            } else {
+                cjlist[cjcount].zpj = 0;
+                cjlist[cjcount].zxf = 0;
+            }
             cjcount++;
         }else{
-            cjlist[locateByID(sclist[i].xh, cjlist, cjcount)].cj[getClassPosByClassID(clist, ccount, sclist[i].kh)] = sclist[i].cj;
-            //v:原加权平均乘以学分加当前成绩乘以当前学分
-            cjlist[locateByID(sclist[i].xh, cjlist, cjcount)].zpj = (cjlist[locateByID(sclist[i].xh, cjlist, cjcount)].zpj*cjlist[locateByID(sclist[i].xh, cjlist, cjcount)].zxf + sclist[i].cj*getPointByClass(clist, ccount, sclist[i].kh));
-            //v:更新总学分
-            cjlist[locateByID(sclist[i].xh, cjlist, cjcount)].zxf += getPointByClass(clist, ccount, sclist[i].kh);
-            //v:除以总学分得到新的加权平均
-            cjlist[locateByID(sclist[i].xh, cjlist, cjcount)].zpj /= cjlist[locateByID(sclist[i].xh, cjlist, cjcount)].zxf;
+            int idx = locateByID(sclist[i].xh, cjlist, cjcount);
+            int pos = getClassPosByClassID(clist, ccount, sclist[i].kh);
+            cjlist[idx].cj[pos] = sclist[i].cj;
+
+            if (sclist[i].cj != -1){
+                float credit = getPointByClass(clist, ccount, sclist[i].kh);
+                cjlist[idx].zpj += sclist[i].cj * credit;
+                cjlist[idx].zxf += credit;
+            }
         }
     }
-    //printScore(cjlist, cjcount, clist, ccount);
 
-    //system("pause");
+    for (int i=0; i<cjcount; i++){
+        if (cjlist[i].zxf > 0)
+            cjlist[i].zpj /= cjlist[i].zxf;
+        else
+            cjlist[i].zpj = 0;
+    }
+
     return cjcount;
 }

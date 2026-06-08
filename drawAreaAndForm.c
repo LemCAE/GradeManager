@@ -98,3 +98,180 @@ int inputForm(inputField fields[], int count, void (*drawFrame)(void)){
         setcolor(0,7);
     }
 }
+
+//////输入框
+
+void drawTableFrameStudentQuery(){
+    gotoxy(5,2);
+    printf("请输入学生数据（优先查询学号）");
+
+    gotoxy(5,3);
+    printChar('=', 26);
+
+    // 标题行竖线
+    gotoxy(5,4);printf("|");
+    gotoxy(20,4);printf("|");
+    gotoxy(30,4);printf("|");
+
+    // 分隔线
+    gotoxy(5,5);
+    printChar('-', 26);
+
+    // 输入行竖线
+    gotoxy(5,6);printf("|");
+    gotoxy(20,6);printf("|");
+    gotoxy(30,6);printf("|");
+
+    // 底线
+    gotoxy(5,7);
+    printChar('=', 26);
+}
+
+void drawTableFrameCourseQuery(){
+    
+    gotoxy(5, 2);
+    printf("请输入课程数据（优先查询课号）");
+
+    gotoxy(5, 3);
+    printChar('=', 33);
+
+    gotoxy(5, 4);  putchar('|');
+    gotoxy(16, 4); putchar('|');
+    gotoxy(37, 4); putchar('|');
+
+    gotoxy(5, 5);
+    printChar('-', 33);
+
+    gotoxy(5, 6);  putchar('|');
+    gotoxy(16, 6); putchar('|');
+    gotoxy(37, 6); putchar('|');
+
+    gotoxy(5, 7);
+    printChar('=', 33);
+    
+}
+
+void displayStudent(Student slist[], int index){
+    system("cls");
+
+    int x1 = 5,  x2 = 17, x3 = 35, x4 = 43;
+    int tableStartRow = 2;
+    int dataStartRow = tableStartRow + 2;
+    int bottomRow = dataStartRow + 1;
+
+    gotoxy(5,0);
+    printf("查询到学生如下：");
+    gotoxy(x1, tableStartRow -1);
+    printChar('=', (x4 + 4) - x1);
+
+    gotoxy(x1, tableStartRow); printf("学号");
+    gotoxy(x2, tableStartRow); printf("姓名");
+    gotoxy(x3, tableStartRow); printf("性别");
+    gotoxy(x4, tableStartRow); printf("年龄");
+    
+    gotoxy(x1, tableStartRow + 1);
+    printChar('-', (x4 + 4) - x1);
+
+    gotoxy(x1, dataStartRow); printf("%s", slist[index].xh);
+    gotoxy(x2, dataStartRow); printf("%s", slist[index].xm);
+    gotoxy(x3, dataStartRow); printf("%s", slist[index].xb);
+    gotoxy(x4, dataStartRow); printf("%3d", slist[index].nl);
+
+    gotoxy(x1, bottomRow);
+    printChar('=', (x4 + 4) - x1);
+
+}
+
+void displayCourse(Course clist[], int index){
+    int x1 = 5,  x2 = 17, x3 = 40;
+    int tableStartRow = 2;
+    int dataStartRow = tableStartRow + 2;
+    int bottomRow = dataStartRow + 1;
+
+    system("cls");
+
+    gotoxy(x1, tableStartRow -2);
+    printf("查询到课程如下：");
+    gotoxy(x1, tableStartRow -1);
+    printChar('=', (x3 + 4) - x1);
+
+    gotoxy(x1, tableStartRow); printf("课号");
+    gotoxy(x2, tableStartRow); printf("课程名");
+    gotoxy(x3, tableStartRow); printf("学分");
+    
+    gotoxy(x1, tableStartRow + 1);
+    printChar('-', (x3 + 4) - x1);
+
+    gotoxy(x1, dataStartRow); printf("%s", clist[index].kh);
+    gotoxy(x2, dataStartRow); printf("%s", clist[index].km);
+    gotoxy(x3, dataStartRow); printf("%4.1f", clist[index].xf);
+    
+    gotoxy(x1, bottomRow);
+    printChar('=', (x3 + 4) - x1);
+}
+
+void displayScore(Score cjlist[], int index, Course clist[], int ccount, Student slist[], int scount, Select sclist[], int sccount){
+    int x1 = 5,  x2 = 17, x3 = 35, x4 = 45;
+    int tableStartRow = 2;
+    int dataStartRow = tableStartRow + 2;
+    int bottomRow = dataStartRow + 1;
+    int detailRow = bottomRow + 2;
+
+    system("cls");
+
+    gotoxy(x1, tableStartRow -2);
+    printf("查询到成绩如下：");
+    gotoxy(x1, tableStartRow -1);
+    printChar('=', (x4 + 6) - x1);
+
+    gotoxy(x1, tableStartRow); printf("学号");
+    gotoxy(x2, tableStartRow); printf("姓名");
+    gotoxy(x3, tableStartRow); printf("平均分");
+    gotoxy(x4, tableStartRow); printf("总学分");
+
+    gotoxy(x1, tableStartRow + 1);
+    printChar('-', (x4 + 6) - x1);
+
+    gotoxy(x1, dataStartRow); printf("%s", cjlist[index].xh);
+    gotoxy(x2, dataStartRow); printf("%s", cjlist[index].xm);
+    gotoxy(x3, dataStartRow); printf("%.2f", cjlist[index].zpj);
+    gotoxy(x4, dataStartRow); printf("%6.1f", cjlist[index].zxf);   
+    
+    gotoxy(x1, bottomRow);
+    printChar('=', (x4 + 6) - x1);
+
+    int dx1 = 5,  dx2 = 17, dx3 = 40;
+    int detailCount = 0;
+
+    gotoxy(dx1, detailRow);
+    printf("各科成绩细则");
+    gotoxy(dx1, detailRow + 1);
+    printChar('=', (dx3 + 4) - dx1);
+    gotoxy(dx1, detailRow + 2); printf("课号");
+    gotoxy(dx2, detailRow + 2); printf("课程名");
+    gotoxy(dx3, detailRow + 2); printf("成绩");
+
+    gotoxy(dx1, detailRow + 3);
+    printChar('-', (dx3 + 4) - dx1);
+
+
+    for(int i = 0; i < ccount; i++){
+        gotoxy(dx1, detailRow + 4 + detailCount);
+        if ((cjlist[index].cj[i] != -1) && (cjlist[index].cj[i] != -2)){
+            gotoxy(dx1, detailRow + 4 + detailCount); printf("%s", clist[i].kh);
+            gotoxy(dx2, detailRow + 4 + detailCount); printf("%s", clist[i].km);
+            gotoxy(dx3, detailRow + 4 + detailCount); printf("%.1f", cjlist[index].cj[i]);
+            detailCount++;
+        } else if (cjlist[index].cj[i] == -1){
+            gotoxy(dx1, detailRow + 4 + detailCount); printf("%s", clist[i].kh);
+            gotoxy(dx2, detailRow + 4 + detailCount); printf("%s", clist[i].km);
+            gotoxy(dx3, detailRow + 4 + detailCount); printf("暂无");
+            detailCount++;
+        }
+        
+    }
+
+    gotoxy(dx1, detailRow + 4 + detailCount);
+    printChar('=', (dx3 + 4) - dx1);
+
+}
