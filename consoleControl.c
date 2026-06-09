@@ -15,6 +15,6 @@ void printChar(char c, int number){
     }
 }
 
-void cleaInputBuffer() {//清空缓冲区
+void clearInputBuffer() {//清空缓冲区
     while (getchar() != '\n');
 }

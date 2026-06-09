@@ -47,7 +47,7 @@ typedef struct
 
 typedef struct{
     char *title;
-    char buffer[20];
+    char buffer[30];
     int pos;
     int x;
     int width;
@@ -78,7 +78,7 @@ int input_select(Select sclist[], int sccount, Student slist[], int scount, Cour
 //数据删除，返回剩余的记录数
 int delete_std(Student slist[], int scount);       // 根据姓名或学号删除学生记录
 int delete_course(Course clist[], int ccount);     // 根据课程名或课号删除课程记录
-int delete_select(Select sclist[], int sccount);   // 根据学号删除选课记录
+int delete_select(Select sclist[], int sccount, Student slist[], int scount, Course clist[], int ccount, Score cjlist[], int cjcount);   // 根据学号删除选课记录
 
 //数据查询
 void query_std(Student slist[], int scount, int *stuPos);                 // 按学号或姓名查询学生
@@ -112,7 +112,7 @@ void initDefault(Student slist[], int *scount, Course clist[], int *ccount, Sele
 void gotoxy(int x, int y);
 void setcolor(int bg, int fg);
 void printChar(char c, int number);
-void cleaInputBuffer();//清空缓冲区，不过现在暂时用不着了
+void clearInputBuffer();//清空缓冲区，不过现在暂时用不着了
 
 //查询
 int queryStuExistByID(Student slist[], int scount, char xh[]);
@@ -140,8 +140,10 @@ void drawField(inputField *f, int active);
 int inputForm(inputField fields[], int count, void (*drawFrame)(void));
 void drawTableFrameStudentQuery();
 void drawTableFrameCourseQuery();
+void drawTable(int xPos[], int count, char title[]);
 void displayStudent(Student slist[], int scount);
 void displayCourse(Course clist[], int ccount);
 void displayScore(Score cjlist[], int index, Course clist[], int ccount, Student slist[], int scount, Select sclist[], int sccount);
+void displayDeleteSelect(Score cjlist[], int index, Course clist[], int ccount, Student slist[], int scount, Select sclist[], int *sccount);
 
 #endif

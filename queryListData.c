@@ -117,7 +117,14 @@ void query_cjlist(Score cjlist[], int cjcount, Course clist[], int ccount, Stude
             _getch();
         }
     }else{
-        int dataPos = queryExistInCJLByIDWithPos(sclist, sccount, cjlist, cjcount, slist[queryStuExistByName(slist, scount, fields[0].buffer)].xh);
+        int stuIdx = queryStuExistByName(slist, scount, fields[0].buffer);
+        if (stuIdx == -1){
+            gotoxy(5, 10);
+            printf("未找到该学生");
+            _getch();
+            return;
+        }
+        int dataPos = queryExistInCJLByIDWithPos(sclist, sccount, cjlist, cjcount, slist[stuIdx].xh);
         if (dataPos == -1){
             gotoxy(5, 10);
             printf("未找到该学生");

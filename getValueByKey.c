@@ -8,8 +8,6 @@ int locateByID(char xh[], Score cjlist[], int cjcount){
     }
     printf("[createCJList] locateByID error\n");
     return -1;
-    system("pause");
-    exit(1);
 }
 
 float getPointByClass(Course clist[], int ccount, char kh[]){
@@ -20,8 +18,6 @@ float getPointByClass(Course clist[], int ccount, char kh[]){
     }
     printf("[createCJList] getPointByClass error\n");
     return -1;
-    system("pause");
-    exit(1);
 }
 
 char* getNameByID(Student slist[], int scount, char xh[]){
@@ -33,9 +29,7 @@ char* getNameByID(Student slist[], int scount, char xh[]){
     setcolor(4,7);
     printf("[createCJList] getNameByID error\n");
     setcolor(7,0);
-    return '\0';
-    system("pause");
-    exit(1);
+    return NULL;
 }
 
 int getClassPosByClassID(Course clist[], int ccount, char kh[]){
@@ -46,8 +40,6 @@ int getClassPosByClassID(Course clist[], int ccount, char kh[]){
     }
     printf("[createCJList] getClassPosByClassID error\n");
     return -1;
-    system("pause");
-    exit(1);
 }
 
 int getStuPosByID(Student array[], int length, int id){
@@ -58,8 +50,6 @@ int getStuPosByID(Student array[], int length, int id){
     }
     printf("[dispData] getStuPosByID Error\n");
     return -1;
-    system("pause");
-    exit(1);
 }
 
 int getCrsPosByID(Course array[], int length, int id){
@@ -70,8 +60,6 @@ int getCrsPosByID(Course array[], int length, int id){
     }
     printf("[dispData] getCrsPosByID Error\n");
     return -1;
-    system("pause");
-    exit(1);
 }
 
 int getScoPosBySco(Score array[], int length, float score, int disped[]){
@@ -83,6 +71,4 @@ int getScoPosBySco(Score array[], int length, float score, int disped[]){
     }
     printf("[dispData] getScoPosBySco Error\n");
     return -1;
-    system("pause");
-    exit(1);
 }

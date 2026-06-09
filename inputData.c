@@ -3,6 +3,7 @@
 void drawTableFrameStudent();
 void drawTableFrameCourse();
 void drawTableFrameSelect();
+void drawTable(int xPos[], int count, char title[]);
 
 //主输入函数
 
@@ -33,6 +34,22 @@ int input_std(Student slist[], int scount){
         }
         
         gotoxy(5,10);
+
+        if ((strcmp(fields[2].buffer, "男") != 0) && (strcmp(fields[2].buffer, "女") != 0)){
+            gotoxy(5,10);
+            printf("性别输入错误，请重新输入");
+            _getch();
+            continue;
+        }
+
+        char *endptr;
+        float score = strtof(fields[3].buffer, &endptr);
+        if (*endptr != '\0' || score < 0) {
+            gotoxy(5,10);
+            printf("年龄输入异常，请重新输入");
+            _getch();
+            continue;
+        }
 
         int dataPos = queryStuExistByID(slist, scount, fields[1].buffer);
         if (dataPos == -1){
@@ -88,6 +105,15 @@ int input_course(Course clist[], int ccount){
             continue;
         }
 
+        char *endptr;
+        float score = strtof(courseFields[2].buffer, &endptr);
+        if (*endptr != '\0' || score < 0) {
+            gotoxy(5,10);
+            printf("学分输入异常，请重新输入");
+            _getch();
+            continue;
+        }
+
         gotoxy(5,10);
 
         int dataPos = queryCrsExistByID(clist, ccount, courseFields[0].buffer);
@@ -123,6 +149,7 @@ int input_course(Course clist[], int ccount){
 
 int input_select(Select sclist[], int sccount, Student slist[], int scount, Course clist[], int ccount){
     int ifContinue = 1;
+    int status = 0;
     while(ifContinue){
         system("cls");
 
@@ -135,8 +162,9 @@ int input_select(Select sclist[], int sccount, Student slist[], int scount, Cour
             {"成绩", "", 0, 28, 5}
         };
 
-        inputForm(selectFields, 3, drawTableFrameSelect);
+        status = inputForm(selectFields, 3, drawTableFrameSelect);
 
+        if(!status) return sccount;
         if(!emptyExist(selectFields, 3)){
             gotoxy(5,10);
             printf("信息输入不完整，请重新输入");
@@ -148,11 +176,15 @@ int input_select(Select sclist[], int sccount, Student slist[], int scount, Cour
 
         int dataPos = querySelExistByID(sclist, sccount, selectFields[0].buffer, selectFields[1].buffer);
 
-        if (!(-1 <= atof(selectFields[2].buffer) && atof(selectFields[2].buffer) <= 120)){
+        char *endptr;
+        float score = strtof(selectFields[2].buffer, &endptr);
+        if (*endptr != '\0' || score < -1 || score > 120) {
             gotoxy(5,10);
-            printf("成绩异常");
+            printf("成绩输入异常，请重新输入");
+            _getch();
+            continue;
         }
-
+        
         if (queryStuExistByID(slist, scount, selectFields[0].buffer) != -1 && queryCrsExistByID(clist, ccount, selectFields[1].buffer) != -1){
             if (dataPos == -1){
                 strcpy(sclist[sccount].xh, selectFields[0].buffer);
@@ -189,83 +221,41 @@ int input_select(Select sclist[], int sccount, Student slist[], int scount, Cour
 
 ///////////////////////////////////输入区
 
-//画边框的函数..不想写通用了xwx
+//画边框的函数
 void drawTableFrameStudent(){
-    gotoxy(5,2);
-    printf("请输入学生数据：");
-
-    gotoxy(5,3);
-    printChar('=', 46);
-
-    // 标题行竖线
-    gotoxy(5,4);printf("|");
-    gotoxy(20,4);printf("|");
-    gotoxy(30,4);printf("|");
-    gotoxy(40,4);printf("|");
-    gotoxy(50,4);printf("|");
-
-    // 分隔线
-    gotoxy(5,5);
-    printChar('-', 46);
-
-    // 输入行竖线
-    gotoxy(5,6);printf("|");
-    gotoxy(20,6);printf("|");
-    gotoxy(30,6);printf("|");
-    gotoxy(40,6);printf("|");
-    gotoxy(50,6);printf("|");
-
-    // 底线
-    gotoxy(5,7);
-    printChar('=', 46);
+    char title[] = "请输入学生数据：";
+    int xPos[] = {5, 20, 30, 40, 50};
+    drawTable(xPos, 5, title);
 }
 
 void drawTableFrameCourse() {
-    gotoxy(5, 2);
-    printf("请输入课程数据：");
-
-    gotoxy(5, 3);
-    printChar('=', 40);
-
-    gotoxy(5, 4);  putchar('|');
-    gotoxy(16, 4); putchar('|');
-    gotoxy(37, 4); putchar('|');
-    gotoxy(44, 4); putchar('|');
-
-    gotoxy(5, 5);
-    printChar('-', 40);
-
-    gotoxy(5, 6);  putchar('|');
-    gotoxy(16, 6); putchar('|');
-    gotoxy(37, 6); putchar('|');
-    gotoxy(44, 6); putchar('|');
-
-    gotoxy(5, 7);
-    printChar('=', 40);
+    char title[] = "请输入课程数据：";
+    int xPos[] = {5, 16, 37, 44};
+    drawTable(xPos, 4, title);
 }
 
 void drawTableFrameSelect() {
+    char title[] = "请输入选课数据：";
+    int xPos[] = {5, 16, 27, 33};
+    drawTable(xPos, 4, title);
+}
+
+//xPos:x0,x1,x2,x3,..
+void drawTable(int xPos[], int count, char title[]){
     gotoxy(5, 2);
-    printf("请输入选课记录：");
-
+    printf("%s", title);
     gotoxy(5, 3);
-    printChar('=', 29);
-
-    gotoxy(5, 4);  putchar('|');
-    gotoxy(16, 4); putchar('|');
-    gotoxy(27, 4); putchar('|');
-    gotoxy(33, 4); putchar('|');
-
+    printChar('=', xPos[count - 1] - 4);//上边框
+    for (int i = 0; i < count; i++) {
+        gotoxy(xPos[i], 4); putchar('|');
+    }
     gotoxy(5, 5);
-    printChar('-', 29);
-
-    gotoxy(5, 6);  putchar('|');
-    gotoxy(16, 6); putchar('|');
-    gotoxy(27, 6); putchar('|');
-    gotoxy(33, 6); putchar('|');
-
+    printChar('-', xPos[count - 1] - 4);//分隔线
+    for (int i = 0; i < count; i++) {
+        gotoxy(xPos[i], 6); putchar('|');
+    }
     gotoxy(5, 7);
-    printChar('=', 29);
+    printChar('=', xPos[count - 1] - 4);//下边框
 }
 
 int emptyExist(inputField fields[], int count){

@@ -1,16 +1,5 @@
 #include "data.h"
 
-/*
-typedef struct
-{
-    char xh[10];     // 学号
-    char xm[20];     // 姓名
-    float cj[30];    // 各门课程成绩
-    float zpj;       // 加权平均分
-    float zxf;       // 总修习学分
-} Score;
-*/
-
 int create_cjlist(Student slist[], int scount, Select sclist[], int sccount, Course clist[], int ccount, Score cjlist[]){
     system("cls");
     int cjcount=0;

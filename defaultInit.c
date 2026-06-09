@@ -19,7 +19,7 @@ static Course defaultCourses[] = {
 static int defaultCcount = sizeof(defaultCourses) / sizeof(Course);
 
 static Select defaultSelects[] = {
-    {"1001", "01", 85.4},
+    {"1001", "01", 111.4},
     {"1001", "02", 78.0},
     {"1001", "03", 92.0},
     {"1001", "04", -1.0},
@@ -44,9 +44,4 @@ void initDefault(Student slist[], int *scount, Course clist[], int *ccount, Sele
     *ccount = defaultCcount;
     memcpy(sclist, defaultSelects, sizeof(defaultSelects));
     *sccount = defaultSccount;
-    //printStudents(slist, *scount);
-    //printCourses(clist, *ccount);
-    //printSelects(sclist, *sccount);
-    //printf("===== 默认初始化完成 =====\n");
-    //system("pause");
 }
