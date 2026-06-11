@@ -9,7 +9,7 @@ void disp_student(Student slist[], int scount) {
     int totalPages = (scount + PAGE_SIZE - 1) / PAGE_SIZE;
     int currentPage = 0;
 
-    int x1 = 5,  x2 = 17, x3 = 35, x4 = 43;//x1:第一格，..
+    int x1 = 5,  x2 = 17, x3 = 39, x4 = 47;//x1:第一格，..
     int tableStartRow = 2;                  // 表头
     int dataStartRow = tableStartRow + 2;   // 数据第一行
     int dataHeight = PAGE_SIZE;             // 数据区高度
@@ -38,7 +38,7 @@ void disp_student(Student slist[], int scount) {
         int row = dataStartRow + (i - start);
         gotoxy(x1, row); printf("%s", slist[i].xh);
         gotoxy(x2, row); printf("%s", slist[i].xm);
-        gotoxy(x3, row); printf("%s", slist[i].xb);
+        gotoxy(x3 + 1, row); printf("%s", slist[i].xb);//这种只有一个字的（或者长度确定的）就居中吧
         gotoxy(x4, row); printf("%3d", slist[i].nl);
     }
     
@@ -90,7 +90,7 @@ void disp_course(Course clist[], int ccount){
     int totalPages = (ccount + PAGE_SIZE - 1) / PAGE_SIZE;
     int currentPage = 0;
 
-    int x1 = 5,  x2 = 17, x3 = 40;//x1:第一格，..
+    int x1 = 5,  x2 = 17, x3 = 43;//x1:第一格，..
     int tableStartRow = 2;                  // 表头
     int dataStartRow = tableStartRow + 2;   // 数据第一行
     int dataHeight = PAGE_SIZE;             // 数据区高度
@@ -116,7 +116,7 @@ void disp_course(Course clist[], int ccount){
     int end = (start + PAGE_SIZE) < ccount ? (start + PAGE_SIZE) : ccount;
     for (int i = start; i < end; i++) {
         int row = dataStartRow + (i - start);
-        gotoxy(x1, row); printf("%s", clist[i].kh);
+        gotoxy(x1 + 1, row); printf("%s", clist[i].kh);
         gotoxy(x2, row); printf("%s", clist[i].km);
         gotoxy(x3, row); printf("%4.1f", clist[i].xf);
     }
@@ -171,7 +171,7 @@ void disp_cjlist(Score cjlist[], int cjcount, Course clist[], int ccount, Studen
     int currentPage = 0;
     int currentLine = 0;
 
-    int x1 = 5,  x2 = 17, x3 = 35, x4 = 45;//x1:第一格，..
+    int x1 = 5,  x2 = 17, x3 = 40, x4 = 48;//x1:第一格，..
     int tableStartRow = 2;                  // 表头
     int dataStartRow = tableStartRow + 2;   // 数据第一行
     int dataHeight = PAGE_SIZE;             // 数据区高度
@@ -204,7 +204,7 @@ void disp_cjlist(Score cjlist[], int cjcount, Course clist[], int ccount, Studen
         }
         gotoxy(x1, row); printf("%s", cjlist[i].xh);
         gotoxy(x2, row); printf("%s", cjlist[i].xm);
-        gotoxy(x3, row); printf("%.2f", cjlist[i].zpj);
+        gotoxy(x3, row); printf("%6.2f", cjlist[i].zpj);
         gotoxy(x4, row); printf("%6.1f", cjlist[i].zxf);
         setcolor(0, 7);
     }
@@ -213,9 +213,9 @@ void disp_cjlist(Score cjlist[], int cjcount, Course clist[], int ccount, Studen
     printChar('=', (x4 + 6) - x1);
     // 页码
     gotoxy(x1, infoRow);
-    printf("共 %d 条 第 %d / %d 页", cjcount, currentPage + 1, totalPages);
-    gotoxy(x4-20, infoRow);
-    printf("←→:翻页  ↑↓:选择  Esc:退出");
+    printf("共 %d 条 第 %d/%d 页", cjcount, currentPage + 1, totalPages);
+    gotoxy(x4-22, infoRow);
+    printf("←→:翻页 ↑↓:选择 Esc:退出");
 
     dispDetail(cjlist, cjcount, clist, ccount, currentPage, currentLine);
 
@@ -234,10 +234,12 @@ void disp_cjlist(Score cjlist[], int cjcount, Course clist[], int ccount, Studen
             if (key == 80 || key == 72){
                 int itemsOnPage = PAGE_SIZE < (cjcount - PAGE_SIZE * currentPage) ? PAGE_SIZE : (cjcount - PAGE_SIZE * currentPage);
                 if (itemsOnPage <= 0) continue;
-                if (key == 80)
+                if (key == 80){
                     currentLine = (currentLine + 1) % itemsOnPage;
-                else
+                }
+                else{
                     currentLine = (currentLine - 1 + itemsOnPage) % itemsOnPage;
+                }
             }
         } else if (ch == 27) break;
         else continue;
@@ -256,7 +258,7 @@ void disp_cjlist(Score cjlist[], int cjcount, Course clist[], int ccount, Studen
             int row = dataStartRow + (i - start);
             gotoxy(x1, row); printf("%s", cjlist[i].xh);
             gotoxy(x2, row); printf("%s", cjlist[i].xm);
-            gotoxy(x3, row); printf("%.2f", cjlist[i].zpj);
+            gotoxy(x3, row); printf("%6.2f", cjlist[i].zpj);
             gotoxy(x4, row); printf("%6.1f", cjlist[i].zxf);
             setcolor(0, 7);
         }
@@ -264,9 +266,9 @@ void disp_cjlist(Score cjlist[], int cjcount, Course clist[], int ccount, Studen
         gotoxy(x1, infoRow);
         printChar(' ', (x4 + 4) - x1);
         gotoxy(x1, infoRow);
-        printf("共 %d 条 第 %d / %d 页", cjcount, currentPage + 1, totalPages);
-        gotoxy(x4-20, infoRow);
-        printf("←→:翻页  ↑↓:选择  Esc:退出");
+        printf("共 %d 条 第 %d/%d 页", cjcount, currentPage + 1, totalPages);
+        gotoxy(x4-22, infoRow);
+        printf("←→:翻页 ↑↓:选择 Esc:退出");
 
         dispDetail(cjlist, cjcount, clist, ccount, currentPage, currentLine);
     }
@@ -274,41 +276,44 @@ void disp_cjlist(Score cjlist[], int cjcount, Course clist[], int ccount, Studen
 
 void dispDetail(Score cjlist[], int cjcount, Course clist[], int ccount, int currentPage, int currentLine) {
 
-    int dx1 = 55, dx2 = 67, dx3 = 90;
+    int dx1 = 57, dx2 = 69, dx3 = 94, dx4 = 100;
     int detailRow = 0;
     const int PAGE_SIZE = 10;
     int index = currentPage * PAGE_SIZE + currentLine;
     int count = 0;
 
     gotoxy(dx1, detailRow); printf("各科成绩细则");
-    gotoxy(dx1, detailRow + 1); printChar('=', (dx3 + 6) - dx1);
+    gotoxy(dx1, detailRow + 1); printChar('=', (dx4 + 4) - dx1);
     gotoxy(dx1, detailRow + 2); printf("课号");
     gotoxy(dx2, detailRow + 2); printf("课程名");
-    gotoxy(dx3, detailRow + 2); printf("成绩");
-    gotoxy(dx1, detailRow + 3); printChar('-', (dx3 + 6) - dx1);
+    gotoxy(dx3, detailRow + 2); printf(" 成绩");
+    gotoxy(dx4, detailRow + 2); printf("学分");
+    gotoxy(dx1, detailRow + 3); printChar('-', (dx4 + 4) - dx1);
 
     for (int i = 0 ; i<ccount; i++){
-        gotoxy(dx1, detailRow + 4 + count); printChar(' ', (dx3 + 6) - dx1);
+        gotoxy(dx1, detailRow + 4 + count); printChar(' ', (dx4 + 4) - dx1);
         if (cjlist[index].cj[i] != -1 && cjlist[index].cj[i] != -2) {
             gotoxy(dx1, detailRow + 4 + count); printf("%s", clist[i].kh);
             gotoxy(dx2, detailRow + 4 + count); printf("%s", clist[i].km);
             gotoxy(dx3, detailRow + 4 + count); printf("%5.1f", cjlist[index].cj[i]);
+            gotoxy(dx4, detailRow + 4 + count); printf("%4.1f", clist[i].xf);
             count++;
         } else if (cjlist[index].cj[i] == -1) {
             gotoxy(dx1, detailRow + 4 + count); printf("%s", clist[i].kh);
             gotoxy(dx2, detailRow + 4 + count); printf("%s", clist[i].km);
             gotoxy(dx3, detailRow + 4 + count); printf(" 暂无");
+            gotoxy(dx4, detailRow + 4 + count); printf("%4.1f", clist[i].xf);
             count++;
         }
     }
 
     for (int r = count; r < ccount; r++) {
         gotoxy(dx1, detailRow + 4 + r);
-        printChar(' ', (dx3 + 6) - dx1);
+        printChar(' ', (dx4 + 4) - dx1);
     }
 
     setcolor(0, 7);
     gotoxy(dx1, detailRow + 4 + count);
-    printChar('=', (dx3 + 6) - dx1);
+    printChar('=', (dx4 + 4) - dx1);
 
 }

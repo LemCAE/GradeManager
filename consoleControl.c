@@ -14,7 +14,3 @@ void printChar(char c, int number){
         printf("%c", c);
     }
 }
-
-void clearInputBuffer() {//清空缓冲区
-    while (getchar() != '\n');
-}

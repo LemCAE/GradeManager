@@ -69,7 +69,7 @@ void init(Student slist[], int *scount, Course clist[], int *ccount, Select scli
     }
 
     //三个文件都成功打开，读取数据
-    while(fscanf(studentFile,"%9s %19s %3s %d",
+    while(fscanf(studentFile,"%9s %30s %3s %d",
             slist[*scount].xh,
             slist[*scount].xm,
             slist[*scount].xb,
@@ -78,7 +78,7 @@ void init(Student slist[], int *scount, Course clist[], int *ccount, Select scli
         (*scount)++;
     }
 
-    while(fscanf(courseFile,"%9s %24s %f",
+    while(fscanf(courseFile,"%9s %36s %f",
             clist[*ccount].kh,
             clist[*ccount].km,
             &clist[*ccount].xf

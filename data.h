@@ -17,7 +17,7 @@
 typedef struct
 {
     char xh[10];   // 学号
-    char xm[20];   // 姓名，10个汉字以内
+    char xm[41];   // 姓名，10个汉字以内
     char xb[4];    // 性别，只能保存一个汉字（UTF-8需要4字节！目前暂时这样子改）
     int nl;        // 年龄
 } Student;
@@ -25,7 +25,7 @@ typedef struct
 typedef struct
 {
     char kh[10];   // 课号，长度10字符以内
-    char km[25];   // 课名，12个汉字以内
+    char km[49];   // 课名，12个汉字以内
     float xf;      // 课程学分，浮点数
 } Course;
 
@@ -39,7 +39,7 @@ typedef struct
 typedef struct
 {
     char xh[10];     // 学号
-    char xm[20];     // 姓名
+    char xm[31];     // 姓名
     float cj[30];    // 各门课程成绩
     float zpj;       // 加权平均分
     float zxf;       // 总修习学分
@@ -47,7 +47,7 @@ typedef struct
 
 typedef struct{
     char *title;
-    char buffer[30];
+    char buffer[41];
     int pos;
     int x;
     int width;
@@ -112,13 +112,12 @@ void initDefault(Student slist[], int *scount, Course clist[], int *ccount, Sele
 void gotoxy(int x, int y);
 void setcolor(int bg, int fg);
 void printChar(char c, int number);
-void clearInputBuffer();//清空缓冲区，不过现在暂时用不着了
 
 //查询
 int queryStuExistByID(Student slist[], int scount, char xh[]);
 int queryCrsExistByID(Course clist[], int ccount, char kh[]);
 int querySelExistByID(Select sclist[], int sccount, char xh[], char kh[]);
-int queryExistInCJLByID(Select sclist[], int sccount, Score cjlist[], int cjcount, char xh[]);//输入学号，判断该生是否已经存在cjlist中
+int queryExistInCJLByID(Select sclist[], int sccount, Score cjlist[], int cjcount, char xh[]);//输入学号，判断是否已经存在cjlist中
 int emptyExist(inputField fields[], int count);
 int queryStuExistByName(Student slist[], int scount, char xm[]);
 int queryCrsExistByName(Course clist[], int ccount, char km[]);
@@ -141,9 +140,10 @@ int inputForm(inputField fields[], int count, void (*drawFrame)(void));
 void drawTableFrameStudentQuery();
 void drawTableFrameCourseQuery();
 void drawTable(int xPos[], int count, char title[]);
-void displayStudent(Student slist[], int scount);
+void displayStudent(Student slist[], int index);
 void displayCourse(Course clist[], int ccount);
 void displayScore(Score cjlist[], int index, Course clist[], int ccount, Student slist[], int scount, Select sclist[], int sccount);
 void displayDeleteSelect(Score cjlist[], int index, Course clist[], int ccount, Student slist[], int scount, Select sclist[], int *sccount);
+int sureToProcess(int xPos, int yPos);
 
 #endif

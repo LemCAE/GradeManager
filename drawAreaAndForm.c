@@ -16,25 +16,25 @@ void drawField(inputField *f, int active){//绘制输入区
     }
 
     gotoxy(f->x, inputY);
-    printf("%s", f->buffer);//先清空输入框，然后打印缓冲区里面的内容
+    printf("%s", f->buffer);
 }
 
 int inputForm(inputField fields[], int count, void (*drawFrame)(void)){
     int active=0;
 
-    for (int i=0; i<count; i++){//初始化缓冲区和位置
+    for (int i=0; i<count; i++){
         fields[i].buffer[0] = '\0';
         fields[i].pos = 0;
     }
 
-    drawFrame();//调用函数，绘制外边框
+    drawFrame();
 
-    for (int i=0; i<count; i++){//画输入区
+    for (int i=0; i<count; i++){
         drawField(&fields[i], i==active);
     }
     setcolor(0,7);
 
-    while (1){//这里开始读取输入，也许可以加一个按Tab的功能
+    while (1){
         inputField *cur = &fields[active];
         gotoxy(cur->x + utf8DisplayWidth(cur->buffer), 6);//输入位置
         int ch = _getch();
@@ -60,17 +60,16 @@ int inputForm(inputField fields[], int count, void (*drawFrame)(void)){
             return 0;
         } else if (ch == '\b'){
             if (cur->pos > 0){
-            // 找到最后一个 UTF-8 字符的起始位置
+            // 最后一个 UTF-8 字符的起始位置
             int p = cur->pos - 1;
             while (p > 0 && (cur->buffer[p] & 0xC0) == 0x80) p--;  // 跳过后续字节
             int delCharWidth = utf8DisplayWidth(cur->buffer + p); // 待删字符的宽度
 
-            // 擦除屏幕上该字符占据的格数
+            // 擦除该字符
             int currentTotalWidth = utf8DisplayWidth(cur->buffer);
             gotoxy(cur->x + currentTotalWidth - delCharWidth, 6);
             for (int i = 0; i < delCharWidth; i++) putchar(' ');
 
-            // 更新 buffer
             cur->buffer[p] = '\0';
             cur->pos = p;
             }
@@ -103,26 +102,26 @@ int inputForm(inputField fields[], int count, void (*drawFrame)(void)){
 
 void drawTableFrameStudentQuery(){
     char title[] = "请输入学生数据（优先查询学号）";
-    int xPos[] = {5, 20, 30};
+    int xPos[] = {5, 26, 38};
     drawTable(xPos, 3, title);
 }
 
 void drawTableFrameCourseQuery(){
     char title[] = "请输入课程数据（优先查询课号）";
-    int xPos[] = {5, 16, 37};
+    int xPos[] = {5, 16, 42};
     drawTable(xPos, 3, title);
-    
+
 }
 
 void displayStudent(Student slist[], int index){
     system("cls");
 
-    int x1 = 5,  x2 = 17, x3 = 35, x4 = 43;
-    int tableStartRow = 2;
+    int x1 = 5,  x2 = 17, x3 = 39, x4 = 47;
+    int tableStartRow = 4;
     int dataStartRow = tableStartRow + 2;
     int bottomRow = dataStartRow + 1;
 
-    gotoxy(5,0);
+    gotoxy(5,2);
     printf("查询到学生如下：");
     gotoxy(x1, tableStartRow -1);
     printChar('=', (x4 + 4) - x1);
@@ -137,7 +136,7 @@ void displayStudent(Student slist[], int index){
 
     gotoxy(x1, dataStartRow); printf("%s", slist[index].xh);
     gotoxy(x2, dataStartRow); printf("%s", slist[index].xm);
-    gotoxy(x3, dataStartRow); printf("%s", slist[index].xb);
+    gotoxy(x3 + 1, dataStartRow); printf("%s", slist[index].xb);
     gotoxy(x4, dataStartRow); printf("%3d", slist[index].nl);
 
     gotoxy(x1, bottomRow);
@@ -146,8 +145,8 @@ void displayStudent(Student slist[], int index){
 }
 
 void displayCourse(Course clist[], int index){
-    int x1 = 5,  x2 = 17, x3 = 40;
-    int tableStartRow = 2;
+    int x1 = 5,  x2 = 17, x3 = 45;
+    int tableStartRow = 4;
     int dataStartRow = tableStartRow + 2;
     int bottomRow = dataStartRow + 1;
 
@@ -174,8 +173,8 @@ void displayCourse(Course clist[], int index){
 }
 
 void displayScore(Score cjlist[], int index, Course clist[], int ccount, Student slist[], int scount, Select sclist[], int sccount){
-    int x1 = 5,  x2 = 17, x3 = 35, x4 = 45;
-    int tableStartRow = 2;
+    int x1 = 5,  x2 = 17, x3 = 41, x4 = 50;
+    int tableStartRow = 4;
     int dataStartRow = tableStartRow + 2;
     int bottomRow = dataStartRow + 1;
     int detailRow = bottomRow + 2;
@@ -203,19 +202,20 @@ void displayScore(Score cjlist[], int index, Course clist[], int ccount, Student
     gotoxy(x1, bottomRow);
     printChar('=', (x4 + 6) - x1);
 
-    int dx1 = 5,  dx2 = 17, dx3 = 40;
+    int dx1 = 5, dx2 = 17, dx3 = 42, dx4 = 52;
     int detailCount = 0;
 
     gotoxy(dx1, detailRow);
     printf("各科成绩细则");
     gotoxy(dx1, detailRow + 1);
-    printChar('=', (dx3 + 5) - dx1);
+    printChar('=', (dx4 + 4) - dx1);
     gotoxy(dx1, detailRow + 2); printf("课号");
     gotoxy(dx2, detailRow + 2); printf("课程名");
-    gotoxy(dx3, detailRow + 2); printf("成绩");
+    gotoxy(dx3, detailRow + 2); printf(" 成绩");
+    gotoxy(dx4, detailRow + 2); printf("学分");
 
     gotoxy(dx1, detailRow + 3);
-    printChar('-', (dx3 + 5) - dx1);
+    printChar('-', (dx4 + 4) - dx1);
 
 
     for(int i = 0; i < ccount; i++){
@@ -223,27 +223,29 @@ void displayScore(Score cjlist[], int index, Course clist[], int ccount, Student
         if ((cjlist[index].cj[i] != -1) && (cjlist[index].cj[i] != -2)){
             gotoxy(dx1, detailRow + 4 + detailCount); printf("%s", clist[i].kh);
             gotoxy(dx2, detailRow + 4 + detailCount); printf("%s", clist[i].km);
-            gotoxy(dx3, detailRow + 4 + detailCount); printf("%.1f", cjlist[index].cj[i]);
+            gotoxy(dx3, detailRow + 4 + detailCount); printf("%5.1f", cjlist[index].cj[i]);
+            gotoxy(dx4, detailRow + 4 + detailCount); printf("%4.1f", clist[i].xf);
             detailCount++;
         } else if (cjlist[index].cj[i] == -1){
             gotoxy(dx1, detailRow + 4 + detailCount); printf("%s", clist[i].kh);
             gotoxy(dx2, detailRow + 4 + detailCount); printf("%s", clist[i].km);
-            gotoxy(dx3, detailRow + 4 + detailCount); printf("暂无");
+            gotoxy(dx3, detailRow + 4 + detailCount); printf(" 暂无");
+            gotoxy(dx4, detailRow + 4 + detailCount); printf("%4.1f", clist[i].xf);
             detailCount++;
         }
         
     }
 
     gotoxy(dx1, detailRow + 4 + detailCount);
-    printChar('=', (dx3 + 5) - dx1);
+    printChar('=', (dx4 + 4) - dx1);
 
 }
 
 // 基本信息和细则表格
 void drawSelectDetail(Score cjlist[], int index, Course clist[], int ccount, Select sclist[], int sccount, int detailItems[], int detailCount, int selected, int marked[]) {
-    int x1 = 5,  x2 = 17, x3 = 35, x4 = 45;
-    int dx1 = 5, dx2 = 17, dx3 = 40;
-    int tableStartRow = 2;
+    int x1 = 5,  x2 = 17, x3 = 41, x4 = 50;
+    int dx1 = 5, dx2 = 17, dx3 = 42, dx4 = 52;
+    int tableStartRow = 4;
     int dataStartRow = tableStartRow + 2;
     int bottomRow = dataStartRow + 1;
     int detailRow = bottomRow + 2;
@@ -259,16 +261,17 @@ void drawSelectDetail(Score cjlist[], int index, Course clist[], int ccount, Sel
     gotoxy(x1, tableStartRow + 1); printChar('-', (x4 + 6) - x1);
     gotoxy(x1, dataStartRow); printf("%s", cjlist[index].xh);
     gotoxy(x2, dataStartRow); printf("%s", cjlist[index].xm);
-    gotoxy(x3, dataStartRow); printf("%.2f", cjlist[index].zpj);
+    gotoxy(x3, dataStartRow); printf("%6.2f", cjlist[index].zpj);
     gotoxy(x4, dataStartRow); printf("%6.1f", cjlist[index].zxf);
     gotoxy(x1, bottomRow);    printChar('=', (x4 + 6) - x1);
 
     gotoxy(dx1, detailRow); printf("各科成绩细则");
-    gotoxy(dx1, detailRow + 1); printChar('=', (dx3 + 5) - dx1);
+    gotoxy(dx1, detailRow + 1); printChar('=', (dx4 + 4) - dx1);
     gotoxy(dx1, detailRow + 2); printf("课号");
     gotoxy(dx2, detailRow + 2); printf("课程名");
-    gotoxy(dx3, detailRow + 2); printf("成绩");
-    gotoxy(dx1, detailRow + 3); printChar('-', (dx3 + 5) - dx1);
+    gotoxy(dx3, detailRow + 2); printf(" 成绩");
+    gotoxy(dx4, detailRow + 2); printf("学分");
+    gotoxy(dx1, detailRow + 3); printChar('-', (dx4 + 4) - dx1);
 
     for (int k = 0; k < detailCount; k++) {
         int sclistIdx = detailItems[k];
@@ -280,36 +283,38 @@ void drawSelectDetail(Score cjlist[], int index, Course clist[], int ccount, Sel
         else if (isHigh)      setcolor(7, 0);       // 白底黑字
         else if (isMark)      setcolor(4, 14);       // 黄底黑字
         else                  setcolor(0, 7);
-        gotoxy(dx1, row); printChar(' ', (dx3 + 5) - dx1);
+        gotoxy(dx1, row); printChar(' ', (dx4 + 4) - dx1);
         gotoxy(dx1, row); printf("%s", sclist[sclistIdx].kh);
         gotoxy(dx2, row); printf("%s", clist[queryCrsExistByID(clist, ccount, sclist[sclistIdx].kh)].km);
         gotoxy(dx3, row); 
-        if (sclist[sclistIdx].cj == -1) printf("暂无");
-        else printf("%.1f", sclist[sclistIdx].cj);
+        if (sclist[sclistIdx].cj == -1) printf(" 暂无");
+        else printf("%5.1f", sclist[sclistIdx].cj);
+        gotoxy(dx4, row); printf("%4.1f", clist[queryCrsExistByID(clist, ccount, sclist[sclistIdx].kh)].xf);
     }
 
     setcolor(0, 7);
     gotoxy(dx1, detailRow + 4 + detailCount);
-    printChar('=', (dx3 + 5) - dx1);
+    printChar('=', (dx4 + 4) - dx1);
 
     gotoxy(dx1, detailRow + 5 + detailCount);
     printf("↑↓:选择  Space/Del:标记  Enter:删除  Esc:退出");
 }
 
-void drawDetailRow(Score cjlist[], int index, Course clist[], int ccount, Select sclist[], int sclistIdx, int dx1, int dx2, int dx3, int row, int isHigh, int isMark) {
+void drawDetailRow(Score cjlist[], int index, Course clist[], int ccount, Select sclist[], int sclistIdx, int dx1, int dx2, int dx3, int dx4, int row, int isHigh, int isMark) {
     gotoxy(dx1, row);
     if (isHigh && isMark) setcolor(6, 0);      // 红底黄字
     else if (isHigh)      setcolor(7, 0);       // 白底黑字
     else if (isMark)      setcolor(4, 14);       // 黄底黑字
     else                  setcolor(0, 7);
-    gotoxy(dx1, row); printChar(' ', (dx3 + 5) - dx1);
+    gotoxy(dx1, row); printChar(' ', (dx4 + 4) - dx1);
     gotoxy(dx1, row);
     printf("%s", sclist[sclistIdx].kh);
     gotoxy(dx2, row);
     printf("%s",clist[queryCrsExistByID(clist, ccount, sclist[sclistIdx].kh)].km);
     gotoxy(dx3, row);
-    if (sclist[sclistIdx].cj == -1) printf("暂无");
-    else printf("%.1f", sclist[sclistIdx].cj);
+    if (sclist[sclistIdx].cj == -1) printf(" 暂无");
+    else printf("%5.1f", sclist[sclistIdx].cj);
+    gotoxy(dx4, row); printf("%4.1f", clist[queryCrsExistByID(clist, ccount, sclist[sclistIdx].kh)].xf);
     setcolor(0, 7);
     gotoxy(0, 0);
 }
@@ -320,8 +325,8 @@ void clearRow(int x, int y, int width) {
 }
 
 void displayDeleteSelect(Score cjlist[], int index, Course clist[], int ccount, Student slist[], int scount, Select sclist[], int *sccount) {
-    int dx1 = 5, dx2 = 17, dx3 = 40;
-    int dataBeginRow = 11;
+    int dx1 = 5, dx2 = 17, dx3 = 42, dx4 = 52;
+    int dataBeginRow = 13;
 
     // 选课记录索引
     int detailItems[SELECT_MAX];
@@ -335,7 +340,7 @@ void displayDeleteSelect(Score cjlist[], int index, Course clist[], int ccount, 
 
     if (detailCount == 0) {
         system("cls");
-        gotoxy(5, 5); printf("该学生没有选课记录！");
+        gotoxy(5, 7); printf("该学生没有选课记录！");
         _getch();
         return;
     }
@@ -344,7 +349,7 @@ void displayDeleteSelect(Score cjlist[], int index, Course clist[], int ccount, 
     int marked[SELECT_MAX] = {0};
 
     drawSelectDetail(cjlist, index, clist, ccount, sclist, *sccount, detailItems, detailCount, selected, marked);
-    drawDetailRow(cjlist, index, clist, ccount, sclist, detailItems[selected], dx1, dx2, dx3, dataBeginRow + selected, 1, marked[selected]);
+    drawDetailRow(cjlist, index, clist, ccount, sclist, detailItems[selected], dx1, dx2, dx3, dx4, dataBeginRow + selected, 1, marked[selected]);
 
     while (1) {
         int ch = _getch();
@@ -354,20 +359,20 @@ void displayDeleteSelect(Score cjlist[], int index, Course clist[], int ccount, 
                 int prev = selected;
                 selected = (selected - 1 + detailCount) % detailCount;
                 // 重绘旧行和新行
-                drawDetailRow(cjlist, index, clist, ccount, sclist, detailItems[prev], dx1, dx2, dx3, dataBeginRow + prev, 0, marked[prev]);
-                drawDetailRow(cjlist, index, clist, ccount, sclist, detailItems[selected], dx1, dx2, dx3, dataBeginRow + selected, 1, marked[selected]);
+                drawDetailRow(cjlist, index, clist, ccount, sclist, detailItems[prev], dx1, dx2, dx3, dx4, dataBeginRow + prev, 0, marked[prev]);
+                drawDetailRow(cjlist, index, clist, ccount, sclist, detailItems[selected], dx1, dx2, dx3, dx4, dataBeginRow + selected, 1, marked[selected]);
             } else if (key == 80 && detailCount > 0) { // 下
                 int prev = selected;
                 selected = (selected + 1) % detailCount;
-                drawDetailRow(cjlist, index, clist, ccount, sclist, detailItems[prev], dx1, dx2, dx3, dataBeginRow + prev, 0, marked[prev]);
-                drawDetailRow(cjlist, index, clist, ccount, sclist, detailItems[selected], dx1, dx2, dx3, dataBeginRow + selected, 1, marked[selected]);
+                drawDetailRow(cjlist, index, clist, ccount, sclist, detailItems[prev], dx1, dx2, dx3, dx4, dataBeginRow + prev, 0, marked[prev]);
+                drawDetailRow(cjlist, index, clist, ccount, sclist, detailItems[selected], dx1, dx2, dx3, dx4, dataBeginRow + selected, 1, marked[selected]);
             } else if (key == 83 && detailCount > 0) { // Del
                 marked[selected] = !marked[selected];
-                drawDetailRow(cjlist, index, clist, ccount, sclist, detailItems[selected], dx1, dx2, dx3, dataBeginRow + selected, 1, marked[selected]);
+                drawDetailRow(cjlist, index, clist, ccount, sclist, detailItems[selected], dx1, dx2, dx3, dx4, dataBeginRow + selected, 1, marked[selected]);
             }
         } else if (ch == 32 && detailCount > 0) { // 空格
             marked[selected] = !marked[selected];
-            drawDetailRow(cjlist, index, clist, ccount, sclist, detailItems[selected], dx1, dx2, dx3, dataBeginRow + selected, 1, marked[selected]);
+            drawDetailRow(cjlist, index, clist, ccount, sclist, detailItems[selected], dx1, dx2, dx3, dx4, dataBeginRow + selected, 1, marked[selected]);
         } else if (ch == 13) { // 回车
             // 收集待删索引
             int toDelete[SELECT_MAX], delCount = 0;
@@ -397,4 +402,28 @@ void displayDeleteSelect(Score cjlist[], int index, Course clist[], int ccount, 
             break;
         }
     }
+}
+
+int sureToProcess(int xPos, int yPos) {
+    int selected = 1;
+    while (1){
+        gotoxy(xPos, yPos);
+        if (selected){
+            setcolor(7,0); printf("是"); setcolor(0,7); printf("  否");
+        } else {
+            printf("是  "); setcolor(7,0); printf("否"); setcolor(0,7);
+        }
+        int ch = _getch();
+        if (ch == 224){
+            int key = _getch();
+            if (key == 75 || key == 77){
+                selected = !selected;
+            }
+        } else if (ch == 13){
+            break;
+        } else if (ch == 27){
+            return -1;
+        }
+    }
+    return selected;
 }

@@ -17,10 +17,10 @@ int input_std(Student slist[], int scount){
         printf("←→切换输入项，回车确认，ESC退出");
 
         inputField fields[] = {
-            {"姓名", "", 0, 6, 9},
-            {"学号", "", 0, 21, 9},
-            {"性别", "", 0, 31, 9},
-            {"年龄", "", 0, 41, 4}
+            {"姓名", "", 0, 6, 20},
+            {"学号", "", 0, 28, 10},
+            {"性别", "", 0, 39, 4},
+            {"年龄", "", 0, 44, 4}
         };
 
         status = inputForm(fields, 4, drawTableFrameStudent);
@@ -59,10 +59,9 @@ int input_std(Student slist[], int scount){
             slist[scount].nl = atoi(fields[3].buffer);
             scount++;
         } else{
-            printf("学号已存在,是否覆盖？(y/n):");
-            char coverChoice;
-            scanf(" %c", &coverChoice);
-            if (coverChoice == 'y'){
+            printf("学号已存在,是否覆盖？");
+            int selected = sureToProcess(32, 10);
+            if (selected == 1){
                 strcpy(slist[dataPos].xm, fields[0].buffer);
                 strcpy(slist[dataPos].xh, fields[1].buffer);
                 strcpy(slist[dataPos].xb, fields[2].buffer);
@@ -72,10 +71,8 @@ int input_std(Student slist[], int scount){
         gotoxy(5,10);
         for (int i = 0; i < 75; i++) putchar(' ');
         gotoxy(5,10);
-        char contChoice;
-        printf("是否继续输入？(y/n):");
-        scanf(" %c", &contChoice);
-        ifContinue = (contChoice == 'y');
+        printf("是否继续输入？");
+        ifContinue = (sureToProcess(20, 10) == 1);
     }
     return scount;
 }
@@ -91,8 +88,8 @@ int input_course(Course clist[], int ccount){
 
         inputField courseFields[] = {
             {"课号", "", 0, 6, 10},
-            {"课名", "", 0, 17, 20},
-            {"学分", "", 0, 38, 6}
+            {"课名", "", 0, 17, 24},
+            {"学分", "", 0, 42, 6}
         };
 
         status = inputForm(courseFields, 3, drawTableFrameCourse);
@@ -124,10 +121,9 @@ int input_course(Course clist[], int ccount){
             clist[ccount].xf = atof(courseFields[2].buffer);
             ccount++;
         } else{
-            printf("课号已存在,是否覆盖？(y/n):");
-            char coverChoice;
-            scanf(" %c", &coverChoice);
-            if (coverChoice == 'y'){
+            printf("课号已存在,是否覆盖？");
+            int selected = sureToProcess(32, 10);
+            if (selected == 1){
                 strcpy(clist[dataPos].kh, courseFields[0].buffer);
                 strcpy(clist[dataPos].km, courseFields[1].buffer);
                 clist[dataPos].xf = atof(courseFields[2].buffer);
@@ -137,10 +133,8 @@ int input_course(Course clist[], int ccount){
         gotoxy(5,10);
         for (int i = 0; i < 75; i++) putchar(' ');
         gotoxy(5,10);
-        char contChoice;
-        printf("是否继续输入？(y/n):");
-        scanf(" %c", &contChoice);
-        ifContinue = (contChoice == 'y');
+        printf("是否继续输入？");
+        ifContinue = (sureToProcess(20, 10) == 1);
     }
     return ccount;
 }
@@ -192,10 +186,9 @@ int input_select(Select sclist[], int sccount, Student slist[], int scount, Cour
                 sclist[sccount].cj = atof(selectFields[2].buffer);
                 sccount++;
             } else{
-                printf("该选课记录已经存在，是否覆盖？(y/n):");
-                char coverChoice;
-                scanf(" %c", &coverChoice);
-                if (coverChoice == 'y'){
+                printf("该选课记录已经存在，是否覆盖？");
+                int selected = sureToProcess(36, 10);
+                if (selected == 1){
                     strcpy(sclist[dataPos].xh, selectFields[0].buffer);
                     strcpy(sclist[dataPos].kh, selectFields[1].buffer);
                     sclist[dataPos].cj = atof(selectFields[2].buffer);
@@ -210,10 +203,8 @@ int input_select(Select sclist[], int sccount, Student slist[], int scount, Cour
         gotoxy(5,10);
         for (int i = 0; i < 75; i++) putchar(' ');
         gotoxy(5,10);
-        char contChoice;
-        printf("是否继续输入？(y/n):");
-        scanf(" %c", &contChoice);
-        ifContinue = (contChoice == 'y');
+        printf("是否继续输入？");
+        ifContinue = (sureToProcess(20, 10) == 1);
     }
     return sccount;
 }
@@ -224,13 +215,13 @@ int input_select(Select sclist[], int sccount, Student slist[], int scount, Cour
 //画边框的函数
 void drawTableFrameStudent(){
     char title[] = "请输入学生数据：";
-    int xPos[] = {5, 20, 30, 40, 50};
+    int xPos[] = {5, 26, 38, 43, 50};
     drawTable(xPos, 5, title);
 }
 
 void drawTableFrameCourse() {
     char title[] = "请输入课程数据：";
-    int xPos[] = {5, 16, 37, 44};
+    int xPos[] = {5, 16, 41, 49};
     drawTable(xPos, 4, title);
 }
 

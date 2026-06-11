@@ -8,8 +8,8 @@ void query_std(Student slist[], int scount, int *stuPos){
     printf("←→切换输入项，回车确认，ESC退出");
 
     inputField fields[] = {
-        {"姓名", "", 0, 6, 9},
-        {"学号", "", 0, 21, 9}
+        {"姓名", "", 0, 6, 20},
+        {"学号", "", 0, 28, 10}
     };
 
     int status = inputForm(fields, 2, drawTableFrameStudentQuery);
@@ -52,7 +52,7 @@ void query_course(Course clist[], int ccount, int *crsPos){
 
     inputField fields[] = {
         {"课号", "", 0, 6, 10},
-        {"课名", "", 0, 17, 20}
+        {"课名", "", 0, 17, 24}
     };
 
     int status = inputForm(fields, 2, drawTableFrameCourseQuery);
@@ -94,8 +94,8 @@ void query_cjlist(Score cjlist[], int cjcount, Course clist[], int ccount, Stude
     printf("←→切换输入项，回车确认，ESC退出");
 
     inputField fields[] = {
-        {"姓名", "", 0, 6, 9},
-        {"学号", "", 0, 21, 9}
+        {"姓名", "", 0, 6, 20},
+        {"学号", "", 0, 28, 10}
     };
 
     int status = inputForm(fields, 2, drawTableFrameStudentQuery);
