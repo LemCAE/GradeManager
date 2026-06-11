@@ -1,5 +1,7 @@
 #include "data.h"
 
+void dispDetail(Score cjlist[], int cjcount, Course clist[], int ccount, int currentPage, int currentLine);
+
 // 显示所有学生，每10条暂停，按学号升序
 void disp_student(Student slist[], int scount) {
     sort_slist(slist, scount);
@@ -127,6 +129,7 @@ void disp_course(Course clist[], int ccount){
     gotoxy(x3-13, infoRow);
     printf("←→:翻页  Esc:退出");
 
+    
     while (1) {
         int ch = _getch();
         if (ch == 0 || ch == 224) {
@@ -166,6 +169,7 @@ void disp_cjlist(Score cjlist[], int cjcount, Course clist[], int ccount, Studen
     const int PAGE_SIZE = 10;
     int totalPages = (cjcount + PAGE_SIZE - 1) / PAGE_SIZE;
     int currentPage = 0;
+    int currentLine = 0;
 
     int x1 = 5,  x2 = 17, x3 = 35, x4 = 45;//x1:第一格，..
     int tableStartRow = 2;                  // 表头
@@ -194,49 +198,117 @@ void disp_cjlist(Score cjlist[], int cjcount, Course clist[], int ccount, Studen
     int end = (start + PAGE_SIZE) < cjcount ? (start + PAGE_SIZE) : cjcount;
     for (int i = start; i < end; i++) {
         int row = dataStartRow + (i - start);
+        if (i == start + currentLine){
+            setcolor(7, 0);
+            gotoxy(x1, row); printChar(' ', (x4 + 6) - x1);
+        }
         gotoxy(x1, row); printf("%s", cjlist[i].xh);
         gotoxy(x2, row); printf("%s", cjlist[i].xm);
         gotoxy(x3, row); printf("%.2f", cjlist[i].zpj);
         gotoxy(x4, row); printf("%6.1f", cjlist[i].zxf);
+        setcolor(0, 7);
     }
-    
+
     gotoxy(x1, bottomRow);
     printChar('=', (x4 + 6) - x1);
     // 页码
     gotoxy(x1, infoRow);
-    printf("共 %d 条  第 %d / %d 页", cjcount, currentPage + 1, totalPages);
-    gotoxy(x4-11, infoRow);
-    printf("←→:翻页  Esc:退出");
+    printf("共 %d 条 第 %d / %d 页", cjcount, currentPage + 1, totalPages);
+    gotoxy(x4-20, infoRow);
+    printf("←→:翻页  ↑↓:选择  Esc:退出");
+
+    dispDetail(cjlist, cjcount, clist, ccount, currentPage, currentLine);
 
     while (1) {
         int ch = _getch();
         if (ch == 0 || ch == 224) {
             int key = _getch();
-            if (key == 75) currentPage = (currentPage - 1 + totalPages) % totalPages;
-            if (key == 77) currentPage = (currentPage + 1) % totalPages;
+            if (key == 75) {
+                currentPage = (currentPage - 1 + totalPages) % totalPages;
+                currentLine = 0;
+            }
+            if (key == 77) {
+                currentPage = (currentPage + 1) % totalPages;
+                currentLine = 0;
+            }
+            if (key == 80 || key == 72){
+                int itemsOnPage = PAGE_SIZE < (cjcount - PAGE_SIZE * currentPage) ? PAGE_SIZE : (cjcount - PAGE_SIZE * currentPage);
+                if (itemsOnPage <= 0) continue;
+                if (key == 80)
+                    currentLine = (currentLine + 1) % itemsOnPage;
+                else
+                    currentLine = (currentLine - 1 + itemsOnPage) % itemsOnPage;
+            }
         } else if (ch == 27) break;
         else continue;
 
         for (int r = 0; r < dataHeight; r++) {
             gotoxy(x1, dataStartRow + r);
+            if (r == currentLine) setcolor(7, 0);
             printChar(' ', (x4 + 6) - x1);
+            setcolor(0, 7);
         }
         start = currentPage * PAGE_SIZE;
         end = (start + PAGE_SIZE) < cjcount ? (start + PAGE_SIZE) : cjcount;
         
         for (int i = start; i < end; i++) {
+            if (i == start + currentLine) setcolor(7, 0);
             int row = dataStartRow + (i - start);
             gotoxy(x1, row); printf("%s", cjlist[i].xh);
             gotoxy(x2, row); printf("%s", cjlist[i].xm);
             gotoxy(x3, row); printf("%.2f", cjlist[i].zpj);
             gotoxy(x4, row); printf("%6.1f", cjlist[i].zxf);
+            setcolor(0, 7);
         }
 
         gotoxy(x1, infoRow);
         printChar(' ', (x4 + 4) - x1);
         gotoxy(x1, infoRow);
-        printf("共 %d 条  第 %d / %d 页", cjcount, currentPage + 1, totalPages);
-        gotoxy(x4-11, infoRow);
-        printf("←→:翻页  Esc:退出");
+        printf("共 %d 条 第 %d / %d 页", cjcount, currentPage + 1, totalPages);
+        gotoxy(x4-20, infoRow);
+        printf("←→:翻页  ↑↓:选择  Esc:退出");
+
+        dispDetail(cjlist, cjcount, clist, ccount, currentPage, currentLine);
     }
+}
+
+void dispDetail(Score cjlist[], int cjcount, Course clist[], int ccount, int currentPage, int currentLine) {
+
+    int dx1 = 55, dx2 = 67, dx3 = 90;
+    int detailRow = 0;
+    const int PAGE_SIZE = 10;
+    int index = currentPage * PAGE_SIZE + currentLine;
+    int count = 0;
+
+    gotoxy(dx1, detailRow); printf("各科成绩细则");
+    gotoxy(dx1, detailRow + 1); printChar('=', (dx3 + 6) - dx1);
+    gotoxy(dx1, detailRow + 2); printf("课号");
+    gotoxy(dx2, detailRow + 2); printf("课程名");
+    gotoxy(dx3, detailRow + 2); printf("成绩");
+    gotoxy(dx1, detailRow + 3); printChar('-', (dx3 + 6) - dx1);
+
+    for (int i = 0 ; i<ccount; i++){
+        gotoxy(dx1, detailRow + 4 + count); printChar(' ', (dx3 + 6) - dx1);
+        if (cjlist[index].cj[i] != -1 && cjlist[index].cj[i] != -2) {
+            gotoxy(dx1, detailRow + 4 + count); printf("%s", clist[i].kh);
+            gotoxy(dx2, detailRow + 4 + count); printf("%s", clist[i].km);
+            gotoxy(dx3, detailRow + 4 + count); printf("%5.1f", cjlist[index].cj[i]);
+            count++;
+        } else if (cjlist[index].cj[i] == -1) {
+            gotoxy(dx1, detailRow + 4 + count); printf("%s", clist[i].kh);
+            gotoxy(dx2, detailRow + 4 + count); printf("%s", clist[i].km);
+            gotoxy(dx3, detailRow + 4 + count); printf(" 暂无");
+            count++;
+        }
+    }
+
+    for (int r = count; r < ccount; r++) {
+        gotoxy(dx1, detailRow + 4 + r);
+        printChar(' ', (dx3 + 6) - dx1);
+    }
+
+    setcolor(0, 7);
+    gotoxy(dx1, detailRow + 4 + count);
+    printChar('=', (dx3 + 6) - dx1);
+
 }

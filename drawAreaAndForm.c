@@ -280,7 +280,7 @@ void drawSelectDetail(Score cjlist[], int index, Course clist[], int ccount, Sel
         else if (isHigh)      setcolor(7, 0);       // 白底黑字
         else if (isMark)      setcolor(4, 14);       // 黄底黑字
         else                  setcolor(0, 7);
-
+        gotoxy(dx1, row); printChar(' ', (dx3 + 5) - dx1);
         gotoxy(dx1, row); printf("%s", sclist[sclistIdx].kh);
         gotoxy(dx2, row); printf("%s", clist[queryCrsExistByID(clist, ccount, sclist[sclistIdx].kh)].km);
         gotoxy(dx3, row); 
@@ -302,6 +302,8 @@ void drawDetailRow(Score cjlist[], int index, Course clist[], int ccount, Select
     else if (isHigh)      setcolor(7, 0);       // 白底黑字
     else if (isMark)      setcolor(4, 14);       // 黄底黑字
     else                  setcolor(0, 7);
+    gotoxy(dx1, row); printChar(' ', (dx3 + 5) - dx1);
+    gotoxy(dx1, row);
     printf("%s", sclist[sclistIdx].kh);
     gotoxy(dx2, row);
     printf("%s",clist[queryCrsExistByID(clist, ccount, sclist[sclistIdx].kh)].km);
@@ -309,6 +311,7 @@ void drawDetailRow(Score cjlist[], int index, Course clist[], int ccount, Select
     if (sclist[sclistIdx].cj == -1) printf("暂无");
     else printf("%.1f", sclist[sclistIdx].cj);
     setcolor(0, 7);
+    gotoxy(0, 0);
 }
 
 void clearRow(int x, int y, int width) {
